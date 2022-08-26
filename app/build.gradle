@@ -53,6 +53,7 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:30.3.2')
     implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
 
     // Hilt
     implementation 'com.google.dagger:hilt-android:2.43.2'

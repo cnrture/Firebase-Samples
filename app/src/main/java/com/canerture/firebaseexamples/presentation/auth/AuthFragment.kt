@@ -7,23 +7,26 @@ import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.databinding.FragmentAuthBinding
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private val binding by viewBinding(FragmentAuthBinding::bind)
 
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        firebaseAuth.currentUser?.let {
+
+        }
+
         with(binding) {
-
-            Firebase.auth.currentUser?.let {
-
-            }
 
             val titleList = arrayListOf(NATIVE_PROVIDERS, ADDITIONAL_PROVIDERS)
 
@@ -32,6 +35,10 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 tab.text = titleList[position]
             }.attach()
+
+            btnSignOut.setOnClickListener {
+                firebaseAuth.signOut()
+            }
         }
     }
 
