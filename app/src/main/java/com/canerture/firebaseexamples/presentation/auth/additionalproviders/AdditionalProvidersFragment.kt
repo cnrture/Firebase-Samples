@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.databinding.FragmentAdditionalProvidersBinding
@@ -75,6 +76,7 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                 firebaseAuth.startActivityForSignInWithProvider(requireActivity(), provider.build())
                     .addOnSuccessListener { authResult ->
                         authResult.user?.let {
+                            findNavController().navigate(R.id.authToFirestoreOperations)
                             Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT)
                                 .show()
                         }
@@ -91,6 +93,7 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                 firebaseAuth.startActivityForSignInWithProvider(requireActivity(), provider.build())
                     .addOnSuccessListener { authResult ->
                         authResult.user?.let {
+                            findNavController().navigate(R.id.authToFirestoreOperations)
                             Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT)
                                 .show()
                         }
@@ -109,6 +112,7 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                 val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
                 val idToken = credential.googleIdToken
                 idToken?.let {
+                    findNavController().navigate(R.id.authToFirestoreOperations)
                     Toast.makeText(requireContext(), "idToken", Toast.LENGTH_SHORT).show()
                 }
             }

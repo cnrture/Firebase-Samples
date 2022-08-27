@@ -1,7 +1,9 @@
 package com.canerture.firebaseexamples.di
 
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.canerture.firebaseexamples.common.AuthOperationsWrapper
+import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +16,19 @@ object FirebaseModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseUser() = Firebase.auth
+    fun provideFirebaseUser() = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFirestore() = FirebaseFirestore.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirestoreOperationsWrapper(firestore: FirebaseFirestore) =
+        FirestoreOperationsWrapper(firestore)
+
+    @Provides
+    @Singleton
+    fun provideAuthOperationsWrapper(firebaseAuth: FirebaseAuth) =
+        AuthOperationsWrapper(firebaseAuth)
 }

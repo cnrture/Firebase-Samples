@@ -3,11 +3,12 @@ package com.canerture.firebaseexamples.presentation.auth
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
+import com.canerture.firebaseexamples.common.AuthOperationsWrapper
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.databinding.FragmentAuthBinding
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -17,18 +18,18 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     private val binding by viewBinding(FragmentAuthBinding::bind)
 
     @Inject
-    lateinit var firebaseAuth: FirebaseAuth
+    lateinit var authOperations: AuthOperationsWrapper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        firebaseAuth.currentUser?.let {
-
+        authOperations.checkCurrentUser {
+            findNavController().navigate(R.id.authToFirestoreOperations)
         }
 
         with(binding) {
 
-            val titleList = arrayListOf(NATIVE_PROVIDERS, ADDITIONAL_PROVIDERS)
+            val titleList = arrayListOf("Native Providers", "Additional Providers")
 
             viewPager.adapter = AuthViewPagerAdapter(childFragmentManager, lifecycle)
 
@@ -37,13 +38,8 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             }.attach()
 
             btnSignOut.setOnClickListener {
-                firebaseAuth.signOut()
+                authOperations.signOut()
             }
         }
-    }
-
-    companion object {
-        private const val NATIVE_PROVIDERS = "Native Providers"
-        private const val ADDITIONAL_PROVIDERS = "Additional Providers"
     }
 }

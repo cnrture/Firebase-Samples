@@ -6,5 +6,15 @@
     <fragment
         android:id="@+id/authFragment"
         android:name="com.canerture.firebaseexamples.presentation.auth.AuthFragment"
-        android:label="AuthFragment" />
+        android:label="AuthFragment" >
+        <action
+            android:id="@+id/authToFirestoreOperations"
+            app:destination="@id/firestoreOperationsFragment"
+            app:popUpTo="@id/login_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/firestoreOperationsFragment"
+        android:name="com.canerture.firebaseexamples.presentation.firestore.FirestoreOperationsFragment"
+        android:label="FirestoreOperationsFragment" />
 </navigation>
