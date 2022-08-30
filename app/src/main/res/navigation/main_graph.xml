@@ -16,5 +16,17 @@
     <fragment
         android:id="@+id/firestoreOperationsFragment"
         android:name="com.canerture.firebaseexamples.presentation.firestore.FirestoreOperationsFragment"
-        android:label="FirestoreOperationsFragment" />
+        android:label="FirestoreOperationsFragment" >
+        <action
+            android:id="@+id/firestoreOperationsToDetail"
+            app:destination="@id/contactDetailBottomSheet" />
+    </fragment>
+    <dialog
+        android:id="@+id/contactDetailBottomSheet"
+        android:name="com.canerture.firebaseexamples.presentation.firestore.ContactDetailBottomSheet"
+        android:label="ContactDetailBottomSheet" >
+        <argument
+            android:name="documentId"
+            app:argType="string" />
+    </dialog>
 </navigation>

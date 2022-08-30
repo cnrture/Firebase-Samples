@@ -8,8 +8,19 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
 
     private val collection = firestore.collection("Contacts")
 
-    fun addData(contact: Contact, onSuccess: () -> Unit = {}, onFailure: (String) -> Unit = {}) {
-        collection.add(contact)
+    fun addData(
+        contact: Contact,
+        onSuccess: () -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+
+        val contactModel = hashMapOf(
+            "name" to contact.name,
+            "surname" to contact.surname,
+            "email" to contact.email
+        )
+
+        collection.add(contactModel)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
@@ -19,7 +30,14 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
-        collection.document(contact.name ?: "Person").set(contact)
+
+        val contactModel = hashMapOf(
+            "name" to contact.name,
+            "surname" to contact.surname,
+            "email" to contact.email
+        )
+
+        collection.document(contact.name ?: "Person").set(contactModel)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
@@ -29,16 +47,42 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
-        val contactRef = collection.document(contact.name.orEmpty())
 
         val hashMap = mapOf(
+            "name" to contact.name,
             "surname" to contact.surname,
             "email" to contact.email
         )
 
-        contactRef.update(hashMap)
+        collection.document(contact.documentId.orEmpty()).update(hashMap)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
+    }
+
+    fun getDataOnce(
+        onSuccess: (List<Contact>) -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+
+        collection.get().addOnSuccessListener {
+
+            val tempList = arrayListOf<Contact>()
+
+            it.forEach { document ->
+                tempList.add(
+                    Contact(
+                        document.id,
+                        document.get("name") as String,
+                        document.get("surname") as String,
+                        document.get("email") as String
+                    )
+                )
+            }
+
+            onSuccess(tempList)
+        }.addOnFailureListener {
+            onFailure(it.message.orEmpty())
+        }
     }
 
     fun getDataWithRealtimeUpdates(
@@ -48,9 +92,45 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
 
         collection.addSnapshotListener { snapshot, error ->
 
-            snapshot?.toObjects(Contact::class.java)?.let { onSuccess(it) }
+            val tempList = arrayListOf<Contact>()
+
+            snapshot?.let {
+                it.forEach { document ->
+                    tempList.add(
+                        Contact(
+                            document.id,
+                            document.get("name") as String,
+                            document.get("surname") as String,
+                            document.get("email") as String
+                        )
+                    )
+                }
+
+                onSuccess(tempList)
+            }
 
             error?.let { onFailure(it.message.orEmpty()) }
+        }
+    }
+
+    fun searchDocument(
+        documentId: String,
+        onSuccess: (Contact) -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+
+        collection.document(documentId).get().addOnSuccessListener { document ->
+            onSuccess(
+                Contact(
+                    document.id,
+                    document.get("name") as String,
+                    document.get("surname") as String,
+                    document.get("email") as String
+                )
+            )
+
+        }.addOnFailureListener {
+            onFailure(it.message.orEmpty())
         }
     }
 }

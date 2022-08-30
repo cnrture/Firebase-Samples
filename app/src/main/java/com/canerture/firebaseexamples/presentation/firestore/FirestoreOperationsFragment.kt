@@ -9,6 +9,7 @@ import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.data.model.Contact
 import com.canerture.firebaseexamples.databinding.FragmentFirestoreOperationsBinding
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -17,8 +18,6 @@ class FirestoreOperationsFragment : Fragment(R.layout.fragment_firestore_operati
 
     private val binding by viewBinding(FragmentFirestoreOperationsBinding::bind)
 
-    private val contactsAdapter by lazy { ContactsAdapter() }
-
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
 
@@ -26,6 +25,14 @@ class FirestoreOperationsFragment : Fragment(R.layout.fragment_firestore_operati
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
+
+            val titleList = arrayListOf("Get Data Once", "Realtime Updates")
+
+            viewPager.adapter = FirestorePagerAdapter(childFragmentManager, lifecycle)
+
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                tab.text = titleList[position]
+            }.attach()
 
             btnAddData.setOnClickListener {
 
@@ -55,27 +62,6 @@ class FirestoreOperationsFragment : Fragment(R.layout.fragment_firestore_operati
                         .show()
                 }
             }
-
-            btnUpdateData.setOnClickListener {
-
-                collectAndCheckData()?.let { contact ->
-
-                    firestoreOperations.updateData(contact, {
-                        Toast.makeText(requireContext(), "Data updated!", Toast.LENGTH_SHORT).show()
-                    }, {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                    })
-                } ?: run {
-                    Toast.makeText(requireContext(), "Missing data!", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            firestoreOperations.getDataWithRealtimeUpdates({
-                contactsAdapter.updateList(it)
-                rvData.adapter = contactsAdapter
-            }, {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-            })
         }
     }
 
@@ -88,7 +74,7 @@ class FirestoreOperationsFragment : Fragment(R.layout.fragment_firestore_operati
             val email = etEmail.text.toString()
 
             return if (name.isNotEmpty() && surname.isNotEmpty() && email.isNotEmpty()) {
-                Contact(name, surname, email)
+                Contact(name = name, surname = surname, email = email)
             } else {
                 null
             }
