@@ -27,17 +27,29 @@ class GetDataOnceFragment : Fragment(R.layout.fragment_get_data_once) {
 
         with(binding) {
 
-            firestoreOperations.getDataOnce({
-                contactsAdapter.updateList(it)
-                rvContacts.adapter = contactsAdapter
+            firestoreOperations.getDataOnce({ list ->
+
+                contactsAdapter.apply {
+
+                    updateList(list)
+                    rvContacts.adapter = this
+
+                    onDetailClick = { documentId ->
+                        val action = FirestoreOperationsFragmentDirections.firestoreOperationsToDetail(documentId)
+                        findNavController().navigate(action)
+                    }
+
+                    onDeleteClick = { documentId ->
+                        firestoreOperations.deleteData(documentId, {
+                            Toast.makeText(requireContext(), "Data deleted!", Toast.LENGTH_SHORT).show()
+                        }, {
+                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        })
+                    }
+                }
             }, {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             })
-
-            contactsAdapter.onItemClick = {
-                val action = FirestoreOperationsFragmentDirections.firestoreOperationsToDetail(it)
-                findNavController().navigate(action)
-            }
         }
     }
 }

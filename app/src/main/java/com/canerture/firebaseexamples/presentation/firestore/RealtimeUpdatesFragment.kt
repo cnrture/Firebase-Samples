@@ -27,17 +27,29 @@ class RealtimeUpdatesFragment : Fragment(R.layout.fragment_realtime_updates) {
 
         with(binding) {
 
-            firestoreOperations.getDataWithRealtimeUpdates({
-                contactsAdapter.updateList(it)
-                rvContacts.adapter = contactsAdapter
+            firestoreOperations.getDataWithRealtimeUpdates({ list ->
+
+                contactsAdapter.apply {
+
+                    updateList(list)
+                    rvContacts.adapter = this
+
+                    onDetailClick = { documentId ->
+                        val action = FirestoreOperationsFragmentDirections.firestoreOperationsToDetail(documentId)
+                        findNavController().navigate(action)
+                    }
+
+                    onDeleteClick = { documentId ->
+                        firestoreOperations.deleteData(documentId, {
+                            Toast.makeText(requireContext(), "Data deleted!", Toast.LENGTH_SHORT).show()
+                        }, {
+                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        })
+                    }
+                }
             }, {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             })
-
-            contactsAdapter.onItemClick = {
-                val action = FirestoreOperationsFragmentDirections.firestoreOperationsToDetail(it)
-                findNavController().navigate(action)
-            }
         }
     }
 }

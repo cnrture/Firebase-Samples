@@ -133,4 +133,17 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
             onFailure(it.message.orEmpty())
         }
     }
+
+    fun deleteData(
+        documentId: String,
+        onSuccess: () -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+
+        collection.document(documentId).delete().addOnSuccessListener {
+            onSuccess()
+        }.addOnFailureListener {
+            onFailure(it.message.orEmpty())
+        }
+    }
 }

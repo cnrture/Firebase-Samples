@@ -10,7 +10,9 @@ class ContactsAdapter : RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder>
 
     private val list = ArrayList<Contact>()
 
-    var onItemClick: (String) -> Unit = {}
+    var onDetailClick: (String) -> Unit = {}
+
+    var onDeleteClick: (String) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactsViewHolder {
         val binding = ItemContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -32,9 +34,14 @@ class ContactsAdapter : RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder>
                 tvSurname.text = item.surname
                 tvEmail.text = item.email
 
-                imgDetail.setOnClickListener {
-                    item.documentId?.let {
-                        onItemClick(it)
+                item.documentId?.let { documentId ->
+
+                    imgDetail.setOnClickListener {
+                        onDetailClick(documentId)
+                    }
+
+                    imgDelete.setOnClickListener {
+                        onDeleteClick(documentId)
                     }
                 }
             }
