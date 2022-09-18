@@ -2,10 +2,10 @@ package com.canerture.firebaseexamples.presentation.firestore
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
+import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.data.model.Contact
 import com.canerture.firebaseexamples.databinding.FragmentFirestoreOperationsBinding
@@ -26,7 +26,7 @@ class FirestoreOperationsFragment : Fragment(R.layout.fragment_firestore_operati
 
         with(binding) {
 
-            val titleList = arrayListOf("Get Data Once", "Realtime Updates")
+            val titleList = arrayListOf("Get Data Once", "Realtime Updates", "Query Data")
 
             viewPager.adapter = FirestorePagerAdapter(childFragmentManager, lifecycle)
 
@@ -39,12 +39,12 @@ class FirestoreOperationsFragment : Fragment(R.layout.fragment_firestore_operati
                 collectAndCheckData()?.let { contact ->
 
                     firestoreOperations.addData(contact, {
-                        Toast.makeText(requireContext(), "Data added!", Toast.LENGTH_SHORT).show()
+                        requireView().showSnack("Data added!")
                     }, {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it)
                     })
                 } ?: run {
-                    Toast.makeText(requireContext(), "Missing data!", Toast.LENGTH_SHORT).show()
+                    requireView().showSnack("Missing data!")
                 }
             }
 
@@ -53,13 +53,12 @@ class FirestoreOperationsFragment : Fragment(R.layout.fragment_firestore_operati
                 collectAndCheckData()?.let { contact ->
 
                     firestoreOperations.setData(contact, {
-                        Toast.makeText(requireContext(), "Data set!", Toast.LENGTH_SHORT).show()
+                        requireView().showSnack("Data set!")
                     }, {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it)
                     })
                 } ?: run {
-                    Toast.makeText(requireContext(), "Missing data!", Toast.LENGTH_SHORT)
-                        .show()
+                    requireView().showSnack("Missing data!")
                 }
             }
         }

@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
+import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.data.model.Contact
 import com.canerture.firebaseexamples.databinding.ContactDetailBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -42,7 +42,7 @@ class ContactDetailBottomSheet : BottomSheetDialogFragment() {
                 etSurname.setText(it.surname)
                 etEmail.setText(it.email)
             }, {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                requireView().showSnack(it)
             })
 
             btnUpdateData.setOnClickListener {
@@ -50,12 +50,12 @@ class ContactDetailBottomSheet : BottomSheetDialogFragment() {
                 collectAndCheckData()?.let { contact ->
 
                     firestoreOperations.updateData(contact, {
-                        Toast.makeText(requireContext(), "Data updated!", Toast.LENGTH_SHORT).show()
+                        requireView().showSnack("Data updated!")
                     }, {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it)
                     })
                 } ?: run {
-                    Toast.makeText(requireContext(), "Missing data!", Toast.LENGTH_SHORT).show()
+                    requireView().showSnack("Missing data!")
                 }
             }
         }

@@ -146,4 +146,32 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
             onFailure(it.message.orEmpty())
         }
     }
+
+    fun queryData(
+        query: String,
+        onSuccess: (List<Contact>) -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+        collection.whereEqualTo("name", query).get().addOnSuccessListener { documents ->
+
+            val tempList = arrayListOf<Contact>()
+
+            documents?.let {
+                it.forEach { document ->
+                    tempList.add(
+                        Contact(
+                            document.id,
+                            document.get("name") as String,
+                            document.get("surname") as String,
+                            document.get("email") as String
+                        )
+                    )
+                }
+
+                onSuccess(tempList)
+            }
+        }.addOnFailureListener {
+            onFailure(it.message.orEmpty())
+        }
+    }
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.AuthOperationsWrapper
+import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.databinding.FragmentNativeProvidersBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,8 +35,9 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
                     authOperations.signUpWithEmailAndPassword(email, password, {
                         findNavController().navigate(R.id.authToFirestoreOperations)
                         Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT).show()
+                        requireView().showSnack("Successful!")
                     }, {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it)
                     })
                 }
             }
@@ -48,9 +50,9 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
                 if (email.isNotEmpty() && password.isNotEmpty()) {
                     authOperations.signInWithEmailAndPassword(email, password, {
                         findNavController().navigate(R.id.authToFirestoreOperations)
-                        Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT).show()
+                        requireView().showSnack("Successful!")
                     }, {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it)
                     })
                 }
             }
@@ -60,12 +62,12 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
 
                 if (phoneNumber.isNotEmpty()) {
                     authOperations.sendVerificationCode(phoneNumber, {
-                        Toast.makeText(requireContext(), "Code sent!", Toast.LENGTH_SHORT).show()
+                        requireView().showSnack("Code sent!")
                     }, {
                         findNavController().navigate(R.id.authToFirestoreOperations)
-                        Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT).show()
+                        requireView().showSnack("Successful!")
                     }, {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it)
                     })
                 }
             }
@@ -76,9 +78,9 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
                 if (verifyCode.isNotEmpty()) {
                     authOperations.verifyCode(verifyCode, {
                         findNavController().navigate(R.id.authToFirestoreOperations)
-                        Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT).show()
+                        requireView().showSnack("Successful!")
                     }, {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it)
                     })
                 }
             }
@@ -86,9 +88,9 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
             btnAnonymous.setOnClickListener {
                 authOperations.signInAnonymously({
                     findNavController().navigate(R.id.authToFirestoreOperations)
-                    Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT).show()
+                    requireView().showSnack("Successful!")
                 }, {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    requireView().showSnack(it)
                 })
             }
         }

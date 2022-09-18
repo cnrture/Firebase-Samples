@@ -9,13 +9,14 @@ class FirestorePagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecyc
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int {
-        return 2
+        return 3
     }
 
     override fun createFragment(position: Int): Fragment {
         when (position) {
             0 -> return GetDataOnceFragment()
             1 -> return RealtimeUpdatesFragment()
+            2 -> return QueryDataFragment()
         }
         return GetDataOnceFragment()
     }

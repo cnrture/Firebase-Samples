@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
+import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.databinding.FragmentAdditionalProvidersBinding
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
@@ -56,15 +57,11 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                                     .build()
                             googleSignInIntentResultLauncher.launch(intentSenderRequest)
                         } catch (e: IntentSender.SendIntentException) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Couldn't start One Tap UI: ${e.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            requireView().showSnack("Couldn't start One Tap UI: ${e.message}")
                         }
                     }
-                    .addOnFailureListener(requireActivity()) { e ->
-                        Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                    .addOnFailureListener(requireActivity()) {
+                        requireView().showSnack(it.message.orEmpty())
                     }
             }
 
@@ -77,12 +74,11 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                     .addOnSuccessListener { authResult ->
                         authResult.user?.let {
                             findNavController().navigate(R.id.authToFirestoreOperations)
-                            Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT)
-                                .show()
+                            requireView().showSnack("Successful!")
                         }
                     }
                     .addOnFailureListener {
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it.message.orEmpty())
                     }
             }
 
@@ -96,11 +92,11 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                             findNavController().navigate(R.id.authToFirestoreOperations)
                             Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT)
                                 .show()
+                            requireView().showSnack("Successful!")
                         }
                     }
                     .addOnFailureListener {
-                        println(it.message)
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        requireView().showSnack(it.message.orEmpty())
                     }
             }
         }
@@ -113,7 +109,7 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                 val idToken = credential.googleIdToken
                 idToken?.let {
                     findNavController().navigate(R.id.authToFirestoreOperations)
-                    Toast.makeText(requireContext(), "idToken", Toast.LENGTH_SHORT).show()
+                    requireView().showSnack("idToken")
                 }
             }
         }
