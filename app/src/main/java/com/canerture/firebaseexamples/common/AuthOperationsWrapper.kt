@@ -32,7 +32,7 @@ class AuthOperationsWrapper @Inject constructor(private val firebaseAuth: Fireba
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
                 authResult.user?.let {
                     onSuccess()
