@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="16dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/cb_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:buttonTint="@color/blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/tv_todo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="16dp"
+            android:text="TextView"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/tv_date"
+            app:layout_constraintEnd_toStartOf="@+id/tv_low_priority"
+            app:layout_constraintStart_toEndOf="@+id/cb_done"
+            app:layout_constraintTop_toTopOf="@+id/cb_done"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_done"
+            app:layout_constraintStart_toEndOf="@+id/cb_done"
+            app:layout_constraintTop_toBottomOf="@+id/tv_todo" />
+
+        <ImageView
+            android:id="@+id/img_delete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv_low_priority"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/img_edit"
+            app:layout_constraintTop_toBottomOf="@+id/tv_low_priority"
+            app:srcCompat="@drawable/ic_delete" />
+
+        <ImageView
+            android:id="@+id/img_edit"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_delete"
+            app:layout_constraintEnd_toStartOf="@+id/img_delete"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/tv_low_priority"
+            app:layout_constraintTop_toTopOf="@+id/img_delete"
+            app:srcCompat="@drawable/ic_edit" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="12dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/todo_line" />
+
+        <TextView
+            android:id="@+id/tv_low_priority"
+            android:layout_width="64dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/low_priority_unselected"
+            android:button="@null"
+            android:gravity="center"
+            android:text="Low"
+            android:textColor="@color/gray"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/img_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_medium_priority"
+            android:layout_width="64dp"
+            android:layout_height="20dp"
+            android:background="@drawable/medium_priority_unselected"
+            android:button="@null"
+            android:gravity="center"
+            android:text="Medium"
+            android:textColor="@color/green"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_low_priority"
+            app:layout_constraintEnd_toEndOf="@+id/tv_low_priority"
+            app:layout_constraintStart_toStartOf="@+id/tv_low_priority"
+            app:layout_constraintTop_toTopOf="@+id/tv_low_priority" />
+
+        <TextView
+            android:id="@+id/tv_high_priority"
+            android:layout_width="64dp"
+            android:layout_height="20dp"
+            android:background="@drawable/high_priority_unselected"
+            android:button="@null"
+            android:gravity="center"
+            android:text="High"
+            android:textColor="@color/red"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_low_priority"
+            app:layout_constraintEnd_toEndOf="@+id/tv_low_priority"
+            app:layout_constraintStart_toStartOf="@+id/tv_low_priority"
+            app:layout_constraintTop_toTopOf="@+id/tv_low_priority" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

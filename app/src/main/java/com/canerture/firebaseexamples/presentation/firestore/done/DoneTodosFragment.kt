@@ -1,24 +1,25 @@
-package com.canerture.firebaseexamples.presentation.firestore
+package com.canerture.firebaseexamples.presentation.firestore.done
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.common.viewBinding
-import com.canerture.firebaseexamples.databinding.FragmentQueryDataBinding
+import com.canerture.firebaseexamples.databinding.FragmentDoneTodosBinding
+import com.canerture.firebaseexamples.presentation.firestore.FirestoreOperationsFragmentDirections
+import com.canerture.firebaseexamples.presentation.firestore.TodosAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class QueryDataFragment : Fragment(R.layout.fragment_query_data) {
+class DoneTodosFragment : Fragment(R.layout.fragment_done_todos) {
 
-    private val binding by viewBinding(FragmentQueryDataBinding::bind)
+    private val binding by viewBinding(FragmentDoneTodosBinding::bind)
 
-    private val contactsAdapter by lazy { ContactsAdapter() }
+    private val todosAdapter by lazy { TodosAdapter() }
 
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
@@ -28,33 +29,22 @@ class QueryDataFragment : Fragment(R.layout.fragment_query_data) {
 
         with(binding) {
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            firestoreOperations.getDoneTodosWithRealtimeUpdates({ list ->
 
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
-
-                override fun onQueryTextChange(query: String?): Boolean {
-                    query?.let {
-                        firestoreOperations.queryData(it, { list ->
-                            contactsAdapter.updateList(list)
-                            rvContacts.adapter = contactsAdapter
-                        }, { errorMessage ->
-                            requireView().showSnack(errorMessage)
-                        })
-                    }
-                    return false
-                }
-            })
-
-            firestoreOperations.getDataOnce({ list ->
-
-                contactsAdapter.apply {
+                todosAdapter.apply {
 
                     updateList(list)
-                    rvContacts.adapter = this
+                    rvTodos.adapter = this
 
-                    onDetailClick = { documentId ->
+                    onDoneClick = { state, documentId ->
+                        firestoreOperations.updateDoneState(state, documentId, {
+                            requireView().showSnack("Done State Updated!")
+                        }, {
+                            requireView().showSnack(it)
+                        })
+                    }
+
+                    onEditClick = { documentId ->
                         val action =
                             FirestoreOperationsFragmentDirections.firestoreOperationsToDetail(
                                 documentId
@@ -63,7 +53,7 @@ class QueryDataFragment : Fragment(R.layout.fragment_query_data) {
                     }
 
                     onDeleteClick = { documentId ->
-                        firestoreOperations.deleteData(documentId, {
+                        firestoreOperations.deleteTodo(documentId, {
                             requireView().showSnack("Data deleted!")
                         }, {
                             requireView().showSnack(it)

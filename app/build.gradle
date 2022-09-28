@@ -59,8 +59,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
 
     // Hilt
-    implementation 'com.google.dagger:hilt-android:2.43.2'
-    kapt 'com.google.dagger:hilt-compiler:2.43.2'
+    implementation 'com.google.dagger:hilt-android:2.44'
+    kapt 'com.google.dagger:hilt-compiler:2.44'
 
     // Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'

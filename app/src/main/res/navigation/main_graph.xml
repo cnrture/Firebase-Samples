@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/login_graph"
     app:startDestination="@id/authFragment">
     <fragment
@@ -19,14 +20,22 @@
         android:label="FirestoreOperationsFragment" >
         <action
             android:id="@+id/firestoreOperationsToDetail"
-            app:destination="@id/contactDetailBottomSheet" />
+            app:destination="@id/todoDetailBottomSheet" />
+        <action
+            android:id="@+id/firestoreOperationsToAddTodo"
+            app:destination="@id/addTodoBottomSheet" />
     </fragment>
     <dialog
-        android:id="@+id/contactDetailBottomSheet"
-        android:name="com.canerture.firebaseexamples.presentation.firestore.ContactDetailBottomSheet"
+        android:id="@+id/todoDetailBottomSheet"
+        android:name="com.canerture.firebaseexamples.presentation.firestore.detail.TodoDetailBottomSheet"
         android:label="ContactDetailBottomSheet" >
         <argument
             android:name="documentId"
             app:argType="string" />
     </dialog>
+    <dialog
+        android:id="@+id/addTodoBottomSheet"
+        android:name="com.canerture.firebaseexamples.presentation.firestore.addtodo.AddTodoBottomSheet"
+        android:label="bottom_sheet_add_todo"
+        tools:layout="@layout/bottom_sheet_add_todo" />
 </navigation>

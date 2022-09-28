@@ -1,80 +1,99 @@
 package com.canerture.firebaseexamples.common
 
-import com.canerture.firebaseexamples.data.model.Contact
+import com.canerture.firebaseexamples.data.model.Todo
 import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
 
 class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestore) {
 
-    private val collection = firestore.collection("Contacts")
+    private val collection = firestore.collection("Todos")
 
-    fun addData(
-        contact: Contact,
+    fun addTodo(
+        todo: Todo,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
 
-        val contactModel = hashMapOf(
-            "name" to contact.name,
-            "surname" to contact.surname,
-            "email" to contact.email
+        val todoModel = hashMapOf(
+            "todo" to todo.todo,
+            "priority" to todo.priority,
+            "isDone" to todo.isDone,
+            "date" to getDateTimeAsFormattedString()
         )
 
-        collection.add(contactModel)
+        collection.add(todoModel)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
 
-    fun setData(
-        contact: Contact,
+    fun setTodo(
+        todo: Todo,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
 
-        val contactModel = hashMapOf(
-            "name" to contact.name,
-            "surname" to contact.surname,
-            "email" to contact.email
+        val todoModel = hashMapOf(
+            "todo" to todo.todo,
+            "priority" to todo.priority,
+            "isDone" to todo.isDone,
+            "date" to getDateTimeAsFormattedString()
         )
 
-        collection.document(contact.name ?: "Person").set(contactModel)
+        collection.document(todo.todo ?: "Todo").set(todoModel)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
 
-    fun updateData(
-        contact: Contact,
+    fun updateTodo(
+        todo: String,
+        documentId: String,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
-
-        val hashMap = mapOf(
-            "name" to contact.name,
-            "surname" to contact.surname,
-            "email" to contact.email
-        )
-
-        collection.document(contact.documentId.orEmpty()).update(hashMap)
+        collection.document(documentId).update("todo", todo)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
 
-    fun getDataOnce(
-        onSuccess: (List<Contact>) -> Unit = {},
+    fun updateImportantState(
+        priority: String,
+        documentId: String,
+        onSuccess: () -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+        collection.document(documentId).update("priority", priority)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it.message.orEmpty()) }
+    }
+
+    fun updateDoneState(
+        isDone: Boolean,
+        documentId: String,
+        onSuccess: () -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+        collection.document(documentId).update("isDone", isDone)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it.message.orEmpty()) }
+    }
+
+    fun getTodosOnce(
+        onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
 
         collection.get().addOnSuccessListener {
 
-            val tempList = arrayListOf<Contact>()
+            val tempList = arrayListOf<Todo>()
 
             it.forEach { document ->
                 tempList.add(
-                    Contact(
+                    Todo(
                         document.id,
-                        document.get("name") as String,
-                        document.get("surname") as String,
-                        document.get("email") as String
+                        document.get("todo") as String,
+                        document.get("priority") as String,
+                        document.get("isDone") as Boolean,
+                        document.get("date") as String
                     )
                 )
             }
@@ -85,23 +104,24 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
-    fun getDataWithRealtimeUpdates(
-        onSuccess: (List<Contact>) -> Unit = {},
+    fun getTodosWithRealtimeUpdates(
+        onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
 
         collection.addSnapshotListener { snapshot, error ->
 
-            val tempList = arrayListOf<Contact>()
+            val tempList = arrayListOf<Todo>()
 
             snapshot?.let {
                 it.forEach { document ->
                     tempList.add(
-                        Contact(
+                        Todo(
                             document.id,
-                            document.get("name") as String,
-                            document.get("surname") as String,
-                            document.get("email") as String
+                            document.get("todo") as String,
+                            document.get("priority") as String,
+                            document.get("isDone") as Boolean,
+                            document.get("date") as String
                         )
                     )
                 }
@@ -113,19 +133,78 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
-    fun searchDocument(
+    fun getDoneTodosWithRealtimeUpdates(
+        onSuccess: (List<Todo>) -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+
+        collection.whereEqualTo("isDone", true).addSnapshotListener { snapshot, error ->
+
+            val tempList = arrayListOf<Todo>()
+
+            snapshot?.let {
+                it.forEach { document ->
+                    tempList.add(
+                        Todo(
+                            document.id,
+                            document.get("todo") as String,
+                            document.get("priority") as String,
+                            document.get("isDone") as Boolean,
+                            document.get("date") as String
+                        )
+                    )
+                }
+
+                onSuccess(tempList)
+            }
+
+            error?.let { onFailure(it.message.orEmpty()) }
+        }
+    }
+
+    fun getNotDoneTodosWithRealtimeUpdates(
+        onSuccess: (List<Todo>) -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+
+        collection.whereEqualTo("isDone", false).addSnapshotListener { snapshot, error ->
+
+            val tempList = arrayListOf<Todo>()
+
+            snapshot?.let {
+                it.forEach { document ->
+                    tempList.add(
+                        Todo(
+                            document.id,
+                            document.get("todo") as String,
+                            document.get("priority") as String,
+                            document.get("isDone") as Boolean,
+                            document.get("date") as String
+                        )
+                    )
+                }
+
+                onSuccess(tempList)
+            }
+
+            error?.let { onFailure(it.message.orEmpty()) }
+        }
+    }
+
+    fun getTodoByDocumentId(
         documentId: String,
-        onSuccess: (Contact) -> Unit = {},
+        onSuccess: (Todo) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
 
         collection.document(documentId).get().addOnSuccessListener { document ->
             onSuccess(
-                Contact(
+                Todo(
                     document.id,
-                    document.get("name") as String,
-                    document.get("surname") as String,
-                    document.get("email") as String
+                    document.get("todo") as String,
+                    document.get("priority") as String,
+                    document.get("isDone") as Boolean,
+                    document.get("date") as String
                 )
             )
 
@@ -134,7 +213,7 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
-    fun deleteData(
+    fun deleteTodo(
         documentId: String,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
@@ -147,23 +226,53 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
-    fun queryData(
+    fun queryTodo(
         query: String,
-        onSuccess: (List<Contact>) -> Unit = {},
+        onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
-        collection.whereEqualTo("name", query).get().addOnSuccessListener { documents ->
+        collection.whereEqualTo("todo", query).get().addOnSuccessListener { documents ->
 
-            val tempList = arrayListOf<Contact>()
+            val tempList = arrayListOf<Todo>()
 
             documents?.let {
                 it.forEach { document ->
                     tempList.add(
-                        Contact(
+                        Todo(
                             document.id,
-                            document.get("name") as String,
-                            document.get("surname") as String,
-                            document.get("email") as String
+                            document.get("todo") as String,
+                            document.get("priority") as String,
+                            document.get("isDone") as Boolean,
+                            document.get("date") as String
+                        )
+                    )
+                }
+
+                onSuccess(tempList)
+            }
+        }.addOnFailureListener {
+            onFailure(it.message.orEmpty())
+        }
+    }
+
+    fun queryTodoByPriority(
+        priority: String,
+        onSuccess: (List<Todo>) -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+        collection.whereEqualTo("priority", priority).get().addOnSuccessListener { documents ->
+
+            val tempList = arrayListOf<Todo>()
+
+            documents?.let {
+                it.forEach { document ->
+                    tempList.add(
+                        Todo(
+                            document.id,
+                            document.get("todo") as String,
+                            document.get("priority") as String,
+                            document.get("isDone") as Boolean,
+                            document.get("date") as String
                         )
                     )
                 }

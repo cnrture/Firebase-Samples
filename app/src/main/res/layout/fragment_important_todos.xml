@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/rb_all"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/all_selector"
+        android:button="@null"
+        android:gravity="center"
+        android:text="All"
+        android:textColor="@color/blue"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/rb_low_priority"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/rb_low_priority"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_low_priority"
+        android:button="@null"
+        android:gravity="center"
+        android:text="Low"
+        android:textColor="@color/gray"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/rb_all"
+        app:layout_constraintEnd_toStartOf="@+id/rb_medium_priority"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/rb_all"
+        app:layout_constraintTop_toTopOf="@+id/rb_all" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/rb_medium_priority"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_medium_priority"
+        android:button="@null"
+        android:gravity="center"
+        android:text="Medium"
+        android:textColor="@color/green"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/rb_all"
+        app:layout_constraintEnd_toStartOf="@+id/rb_high_priority"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/rb_low_priority"
+        app:layout_constraintTop_toTopOf="@+id/rb_all" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/rb_high_priority"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_high_priority"
+        android:button="@null"
+        android:gravity="center"
+        android:text="High"
+        android:textColor="@color/red"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/rb_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/rb_medium_priority"
+        app:layout_constraintTop_toTopOf="@+id/rb_all" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_todos"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rb_all" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

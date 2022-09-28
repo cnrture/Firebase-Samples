@@ -109,7 +109,6 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                 val idToken = credential.googleIdToken
                 idToken?.let {
                     findNavController().navigate(R.id.authToFirestoreOperations)
-                    requireView().showSnack("idToken")
                 }
             }
         }

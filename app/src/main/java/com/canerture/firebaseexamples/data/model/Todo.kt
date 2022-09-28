@@ -4,9 +4,10 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Contact(
+data class Todo(
     val documentId: String? = null,
-    val name: String? = null,
-    val surname: String? = null,
-    val email: String? = null
+    val todo: String? = null,
+    val priority: String? = null,
+    val isDone: Boolean = false,
+    val date: String? = null
 ) : Parcelable
