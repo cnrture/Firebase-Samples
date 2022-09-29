@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/todosFragment"
+        android:icon="@drawable/ic_todos"
+        android:title="@string/title_todos" />
+
+    <item
+        android:id="@+id/priorityFragment"
+        android:icon="@drawable/ic_priority"
+        android:title="@string/title_priority" />
+
+    <item
+        android:id="@+id/doneFragment"
+        android:icon="@drawable/ic_done"
+        android:title="@string/title_done" />
+
+</menu>

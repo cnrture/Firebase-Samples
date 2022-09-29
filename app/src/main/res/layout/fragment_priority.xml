@@ -5,23 +5,6 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.radiobutton.MaterialRadioButton
-        android:id="@+id/rb_all"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/all_selector"
-        android:button="@null"
-        android:gravity="center"
-        android:text="All"
-        android:textColor="@color/blue"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/rb_low_priority"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/rb_low_priority"
         android:layout_width="80dp"
         android:layout_height="40dp"
@@ -32,16 +15,17 @@
         android:textColor="@color/gray"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/rb_all"
+        app:layout_constraintBottom_toBottomOf="@+id/rb_medium_priority"
         app:layout_constraintEnd_toStartOf="@+id/rb_medium_priority"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/rb_all"
-        app:layout_constraintTop_toTopOf="@+id/rb_all" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rb_medium_priority" />
 
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/rb_medium_priority"
         android:layout_width="80dp"
         android:layout_height="40dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/selector_medium_priority"
         android:button="@null"
         android:gravity="center"
@@ -49,11 +33,10 @@
         android:textColor="@color/green"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/rb_all"
         app:layout_constraintEnd_toStartOf="@+id/rb_high_priority"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/rb_low_priority"
-        app:layout_constraintTop_toTopOf="@+id/rb_all" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/rb_high_priority"
@@ -66,11 +49,11 @@
         android:textColor="@color/red"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/rb_all"
+        app:layout_constraintBottom_toBottomOf="@+id/rb_medium_priority"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/rb_medium_priority"
-        app:layout_constraintTop_toTopOf="@+id/rb_all" />
+        app:layout_constraintTop_toTopOf="@+id/rb_medium_priority" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_todos"
@@ -81,6 +64,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rb_all" />
+        app:layout_constraintTop_toBottomOf="@+id/rb_medium_priority" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

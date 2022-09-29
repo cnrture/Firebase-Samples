@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
+import com.canerture.firebaseexamples.common.radioButtonCheckedListener
+import com.canerture.firebaseexamples.common.setCheckedTrue
 import com.canerture.firebaseexamples.common.showSnack
-import com.canerture.firebaseexamples.data.model.Todo
 import com.canerture.firebaseexamples.databinding.BottomSheetAddTodoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +22,7 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
 
-    private var selectedPriority = ""
+    private var selectedPriority = "Low"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,24 +37,24 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
 
         with(binding) {
 
-            rbLowPriority.checked()
-            rbMediumPriority.checked()
-            rbHighPriority.checked()
+            rbLowPriority.setCheckedTrue()
+
+            radioButtonCheckedListener(rbLowPriority, rbMediumPriority, rbHighPriority) {
+                selectedPriority = it
+            }
 
             btnAddTodo.setOnClickListener {
 
                 val todo = etTodo.text.toString()
 
                 if (todo.isNotEmpty()) {
-
-                    val todoModel = Todo(todo = todo, priority = selectedPriority)
-
-                    firestoreOperations.addTodo(todoModel, {
-                        requireView().showSnack("Data added!")
+                    firestoreOperations.addTodo(todo, selectedPriority, {
                         this@AddTodoBottomSheet.dismiss()
                     }, {
-                        requireView().showSnack(it)
+                        dialog?.window?.decorView?.showSnack(it)
                     })
+                } else {
+                    dialog?.window?.decorView?.showSnack("Todo must not be empty!")
                 }
             }
 
@@ -63,41 +63,11 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
                 val todo = etTodo.text.toString()
 
                 if (todo.isNotEmpty()) {
-
-                    val todoModel = Todo(todo = todo, priority = selectedPriority)
-
-                    firestoreOperations.setTodo(todoModel, {
-                        requireView().showSnack("Data set!")
+                    firestoreOperations.setTodo(todo, selectedPriority, {
                         this@AddTodoBottomSheet.dismiss()
                     }, {
-                        requireView().showSnack(it)
+                        dialog?.window?.decorView?.showSnack(it)
                     })
-                }
-            }
-        }
-    }
-
-    private fun RadioButton.checked() {
-
-        setOnClickListener {
-
-            with (binding) {
-                when (it.id) {
-                    rbLowPriority.id -> {
-                        rbMediumPriority.isChecked = false
-                        rbHighPriority.isChecked = false
-                        selectedPriority = rbLowPriority.text.toString()
-                    }
-                    rbMediumPriority.id -> {
-                        rbLowPriority.isChecked = false
-                        rbHighPriority.isChecked = false
-                        selectedPriority = rbMediumPriority.text.toString()
-                    }
-                    rbHighPriority.id -> {
-                        rbLowPriority.isChecked = false
-                        rbMediumPriority.isChecked = false
-                        selectedPriority = rbHighPriority.text.toString()
-                    }
                 }
             }
         }

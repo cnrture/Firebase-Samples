@@ -1,12 +1,12 @@
 package com.canerture.firebaseexamples.presentation.firestore
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.canerture.firebaseexamples.common.Constants.PRIORITY_HIGH
 import com.canerture.firebaseexamples.common.Constants.PRIORITY_LOW
 import com.canerture.firebaseexamples.common.Constants.PRIORITY_MEDIUM
+import com.canerture.firebaseexamples.common.visible
 import com.canerture.firebaseexamples.data.model.Todo
 import com.canerture.firebaseexamples.databinding.ItemTodoBinding
 
@@ -41,10 +41,10 @@ class TodosAdapter : RecyclerView.Adapter<TodosAdapter.TodoViewHolder>() {
 
                 item.documentId?.let { documentId ->
 
-                    when(item.priority) {
-                        PRIORITY_LOW -> tvLowPriority.visibility = View.VISIBLE
-                        PRIORITY_MEDIUM -> tvMediumPriority.visibility = View.VISIBLE
-                        PRIORITY_HIGH -> tvHighPriority.visibility = View.VISIBLE
+                    when (item.priority) {
+                        PRIORITY_LOW -> tvLowPriority.visible()
+                        PRIORITY_MEDIUM -> tvMediumPriority.visible()
+                        PRIORITY_HIGH -> tvHighPriority.visible()
                     }
 
                     cbDone.isChecked = item.isDone

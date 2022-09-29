@@ -20,4 +20,6 @@
 
     <color name="gray">#393939</color>
     <color name="gray_soft">#DDDDDD</color>
+
+    <color name="yellow">#FFB052</color>
 </resources>

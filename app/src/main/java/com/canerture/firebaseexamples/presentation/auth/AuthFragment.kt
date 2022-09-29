@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.AuthOperationsWrapper
+import com.canerture.firebaseexamples.common.Constants.TITLE_ADDITIONAL_PROVIDERS
+import com.canerture.firebaseexamples.common.Constants.TITLE_NATIVE_PROVIDERS
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.databinding.FragmentAuthBinding
 import com.google.android.material.tabs.TabLayoutMediator
@@ -24,22 +26,18 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         super.onViewCreated(view, savedInstanceState)
 
         authOperations.checkCurrentUser {
-            findNavController().navigate(R.id.authToFirestoreOperations)
+            findNavController().navigate(R.id.authToTodos)
         }
 
         with(binding) {
 
-            val titleList = arrayListOf("Native Providers", "Additional Providers")
+            val titleList = arrayListOf(TITLE_NATIVE_PROVIDERS, TITLE_ADDITIONAL_PROVIDERS)
 
             viewPager.adapter = AuthViewPagerAdapter(childFragmentManager, lifecycle)
 
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 tab.text = titleList[position]
             }.attach()
-
-            btnSignOut.setOnClickListener {
-                authOperations.signOut()
-            }
         }
     }
 }

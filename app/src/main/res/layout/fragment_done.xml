@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.firestore.alltodos.AllTodosFragment">
+    tools:context=".presentation.firestore.done.DoneFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_todos"

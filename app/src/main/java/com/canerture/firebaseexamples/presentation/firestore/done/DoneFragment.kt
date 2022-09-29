@@ -8,18 +8,15 @@ import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.common.viewBinding
-import com.canerture.firebaseexamples.databinding.FragmentDoneTodosBinding
-import com.canerture.firebaseexamples.presentation.firestore.FirestoreOperationsFragmentDirections
+import com.canerture.firebaseexamples.databinding.FragmentDoneBinding
 import com.canerture.firebaseexamples.presentation.firestore.TodosAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DoneTodosFragment : Fragment(R.layout.fragment_done_todos) {
+class DoneFragment : Fragment(R.layout.fragment_done) {
 
-    private val binding by viewBinding(FragmentDoneTodosBinding::bind)
-
-    private val todosAdapter by lazy { TodosAdapter() }
+    private val binding by viewBinding(FragmentDoneBinding::bind)
 
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
@@ -29,9 +26,9 @@ class DoneTodosFragment : Fragment(R.layout.fragment_done_todos) {
 
         with(binding) {
 
-            firestoreOperations.getDoneTodosWithRealtimeUpdates({ list ->
+            firestoreOperations.getDoneTodosRealtime({ list ->
 
-                todosAdapter.apply {
+                TodosAdapter().apply {
 
                     updateList(list)
                     rvTodos.adapter = this
@@ -46,7 +43,7 @@ class DoneTodosFragment : Fragment(R.layout.fragment_done_todos) {
 
                     onEditClick = { documentId ->
                         val action =
-                            FirestoreOperationsFragmentDirections.firestoreOperationsToDetail(
+                            DoneFragmentDirections.doneToDetail(
                                 documentId
                             )
                         findNavController().navigate(action)

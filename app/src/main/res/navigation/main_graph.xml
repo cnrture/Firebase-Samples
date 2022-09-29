@@ -7,28 +7,19 @@
     <fragment
         android:id="@+id/authFragment"
         android:name="com.canerture.firebaseexamples.presentation.auth.AuthFragment"
-        android:label="AuthFragment" >
+        android:label="AuthFragment"
+        tools:layout="@layout/fragment_auth">
         <action
-            android:id="@+id/authToFirestoreOperations"
-            app:destination="@id/firestoreOperationsFragment"
-            app:popUpTo="@id/login_graph"
+            android:id="@+id/authToTodos"
+            app:destination="@id/todosFragment"
+            app:popUpTo="@id/authFragment"
             app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/firestoreOperationsFragment"
-        android:name="com.canerture.firebaseexamples.presentation.firestore.FirestoreOperationsFragment"
-        android:label="FirestoreOperationsFragment" >
-        <action
-            android:id="@+id/firestoreOperationsToDetail"
-            app:destination="@id/todoDetailBottomSheet" />
-        <action
-            android:id="@+id/firestoreOperationsToAddTodo"
-            app:destination="@id/addTodoBottomSheet" />
     </fragment>
     <dialog
         android:id="@+id/todoDetailBottomSheet"
         android:name="com.canerture.firebaseexamples.presentation.firestore.detail.TodoDetailBottomSheet"
-        android:label="ContactDetailBottomSheet" >
+        android:label="ContactDetailBottomSheet"
+        tools:layout="@layout/bottom_sheet_todo_detail">
         <argument
             android:name="documentId"
             app:argType="string" />
@@ -38,4 +29,39 @@
         android:name="com.canerture.firebaseexamples.presentation.firestore.addtodo.AddTodoBottomSheet"
         android:label="bottom_sheet_add_todo"
         tools:layout="@layout/bottom_sheet_add_todo" />
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.canerture.firebaseexamples.presentation.firestore.statistics.StatisticsFragment"
+        android:label="fragment_statistics"
+        tools:layout="@layout/fragment_statistics" />
+    <fragment
+        android:id="@+id/todosFragment"
+        android:name="com.canerture.firebaseexamples.presentation.firestore.todos.TodosFragment"
+        android:label="TodosFragment"
+        tools:layout="@layout/fragment_todos">
+        <action
+            android:id="@+id/todosToAddTodo"
+            app:destination="@id/addTodoBottomSheet" />
+        <action
+            android:id="@+id/todosToDetail"
+            app:destination="@id/todoDetailBottomSheet" />
+    </fragment>
+    <fragment
+        android:id="@+id/priorityFragment"
+        android:name="com.canerture.firebaseexamples.presentation.firestore.priority.PriorityFragment"
+        android:label="PriorityFragment"
+        tools:layout="@layout/fragment_priority">
+        <action
+            android:id="@+id/priorityToDetail"
+            app:destination="@id/todoDetailBottomSheet" />
+    </fragment>
+    <fragment
+        android:id="@+id/doneFragment"
+        android:name="com.canerture.firebaseexamples.presentation.firestore.done.DoneFragment"
+        android:label="fragment_done"
+        tools:layout="@layout/fragment_done">
+        <action
+            android:id="@+id/doneToDetail"
+            app:destination="@id/todoDetailBottomSheet" />
+    </fragment>
 </navigation>

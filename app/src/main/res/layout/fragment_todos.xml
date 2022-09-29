@@ -8,17 +8,16 @@
         android:id="@+id/searchViewCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        app:strokeWidth="2dp"
-        app:strokeColor="@color/blue"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="24dp"
         app:cardElevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/blue"
+        app:strokeWidth="2dp">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"

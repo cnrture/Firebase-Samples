@@ -1,7 +1,11 @@
 package com.canerture.firebaseexamples.common
 
+import com.canerture.firebaseexamples.common.Constants.PRIORITY_HIGH
+import com.canerture.firebaseexamples.common.Constants.PRIORITY_LOW
+import com.canerture.firebaseexamples.common.Constants.PRIORITY_MEDIUM
 import com.canerture.firebaseexamples.data.model.Todo
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import javax.inject.Inject
 
 class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestore) {
@@ -9,15 +13,16 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
     private val collection = firestore.collection("Todos")
 
     fun addTodo(
-        todo: Todo,
+        todo: String,
+        priority: String,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
 
         val todoModel = hashMapOf(
-            "todo" to todo.todo,
-            "priority" to todo.priority,
-            "isDone" to todo.isDone,
+            "todo" to todo,
+            "priority" to priority,
+            "isDone" to false,
             "date" to getDateTimeAsFormattedString()
         )
 
@@ -27,41 +32,37 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
     }
 
     fun setTodo(
-        todo: Todo,
+        todo: String,
+        priority: String,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
 
         val todoModel = hashMapOf(
-            "todo" to todo.todo,
-            "priority" to todo.priority,
-            "isDone" to todo.isDone,
+            "todo" to todo,
+            "priority" to priority,
+            "isDone" to false,
             "date" to getDateTimeAsFormattedString()
         )
 
-        collection.document(todo.todo ?: "Todo").set(todoModel)
+        collection.document(todo).set(todoModel)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
 
     fun updateTodo(
         todo: String,
-        documentId: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
-    ) {
-        collection.document(documentId).update("todo", todo)
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure(it.message.orEmpty()) }
-    }
-
-    fun updateImportantState(
         priority: String,
         documentId: String,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
-        collection.document(documentId).update("priority", priority)
+        collection.document(documentId).update(
+            mapOf(
+                "todo" to todo,
+                "priority" to priority
+            )
+        )
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
@@ -104,7 +105,7 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
-    fun getTodosWithRealtimeUpdates(
+    fun getTodosRealtime(
         onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
@@ -133,7 +134,7 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
-    fun getDoneTodosWithRealtimeUpdates(
+    fun getDoneTodosRealtime(
         onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
@@ -162,36 +163,40 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
-    fun getNotDoneTodosWithRealtimeUpdates(
+    fun getNotDoneTodosRealtime(
         onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
 
-        collection.whereEqualTo("isDone", false).addSnapshotListener { snapshot, error ->
+        collection.whereEqualTo("isDone", false).orderBy("date", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
 
-            val tempList = arrayListOf<Todo>()
-
-            snapshot?.let {
-                it.forEach { document ->
-                    tempList.add(
-                        Todo(
-                            document.id,
-                            document.get("todo") as String,
-                            document.get("priority") as String,
-                            document.get("isDone") as Boolean,
-                            document.get("date") as String
-                        )
-                    )
+                if (error != null) {
+                    onFailure(error.message.orEmpty())
+                    return@addSnapshotListener
                 }
 
-                onSuccess(tempList)
-            }
+                val tempList = arrayListOf<Todo>()
 
-            error?.let { onFailure(it.message.orEmpty()) }
-        }
+                snapshot?.let {
+                    it.forEach { document ->
+                        tempList.add(
+                            Todo(
+                                document.id,
+                                document.get("todo") as String,
+                                document.get("priority") as String,
+                                document.get("isDone") as Boolean,
+                                document.get("date") as String
+                            )
+                        )
+                    }
+
+                    onSuccess(tempList)
+                }
+            }
     }
 
-    fun getTodoByDocumentId(
+    fun getTodoByDocumentIdOnce(
         documentId: String,
         onSuccess: (Todo) -> Unit = {},
         onFailure: (String) -> Unit = {}
@@ -255,7 +260,7 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
-    fun queryTodoByPriority(
+    fun getTodoByPriorityOnce(
         priority: String,
         onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
@@ -282,5 +287,20 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }.addOnFailureListener {
             onFailure(it.message.orEmpty())
         }
+    }
+
+    fun getStatistics(
+        statistics: (Int, Int, Int, Int, Int) -> Unit = { _, _, _, _, _ -> }
+    ) {
+
+        getTodosOnce({ todoList ->
+            val done = todoList.filter { it.isDone }.size
+            val notDone = todoList.filter { !it.isDone }.size
+            val lowPriority = todoList.filter { it.priority == PRIORITY_LOW }.size
+            val mediumPriority = todoList.filter { it.priority == PRIORITY_MEDIUM }.size
+            val highPriority = todoList.filter { it.priority == PRIORITY_HIGH }.size
+
+            statistics(done, notDone, lowPriority, mediumPriority, highPriority)
+        })
     }
 }

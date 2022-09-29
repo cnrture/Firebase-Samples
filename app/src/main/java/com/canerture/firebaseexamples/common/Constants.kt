@@ -2,10 +2,8 @@ package com.canerture.firebaseexamples.common
 
 object Constants {
 
-    const val TITLE_TODO = "Todo"
-    const val TITLE_PRIORITY = "Priority"
-    const val TITLE_DONE = "Done"
-    const val TITLE_ALL_TODOS = "All Todos"
+    const val TITLE_NATIVE_PROVIDERS = "Native Providers"
+    const val TITLE_ADDITIONAL_PROVIDERS = "Additional Providers"
 
     const val PRIORITY_LOW = "Low"
     const val PRIORITY_MEDIUM = "Medium"

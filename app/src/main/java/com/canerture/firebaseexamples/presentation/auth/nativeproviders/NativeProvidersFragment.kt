@@ -2,7 +2,6 @@ package com.canerture.firebaseexamples.presentation.auth.nativeproviders
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
@@ -28,33 +27,28 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
 
             btnSignUp.setOnClickListener {
 
-                val email = etEmail.text.toString()
-                val password = etPassword.text.toString()
-
-                if (email.isNotEmpty() && password.isNotEmpty()) {
+                checkEmailAndPassword({ email, password ->
                     authOperations.signUpWithEmailAndPassword(email, password, {
-                        findNavController().navigate(R.id.authToFirestoreOperations)
-                        Toast.makeText(requireContext(), "Successful!", Toast.LENGTH_SHORT).show()
-                        requireView().showSnack("Successful!")
+                        findNavController().navigate(R.id.authToTodos)
                     }, {
                         requireView().showSnack(it)
                     })
-                }
+                }, {
+                    requireView().showSnack("Email or password cannot be empty!")
+                })
             }
 
             btnSignIn.setOnClickListener {
 
-                val email = etEmail.text.toString()
-                val password = etPassword.text.toString()
-
-                if (email.isNotEmpty() && password.isNotEmpty()) {
+                checkEmailAndPassword({ email, password ->
                     authOperations.signInWithEmailAndPassword(email, password, {
-                        findNavController().navigate(R.id.authToFirestoreOperations)
-                        requireView().showSnack("Successful!")
+                        findNavController().navigate(R.id.authToTodos)
                     }, {
                         requireView().showSnack(it)
                     })
-                }
+                }, {
+                    requireView().showSnack("Email or password cannot be empty!")
+                })
             }
 
             btnPhone.setOnClickListener {
@@ -64,7 +58,7 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
                     authOperations.sendVerificationCode(phoneNumber, {
                         requireView().showSnack("Code sent!")
                     }, {
-                        findNavController().navigate(R.id.authToFirestoreOperations)
+                        findNavController().navigate(R.id.authToTodos)
                         requireView().showSnack("Successful!")
                     }, {
                         requireView().showSnack(it)
@@ -77,8 +71,7 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
 
                 if (verifyCode.isNotEmpty()) {
                     authOperations.verifyCode(verifyCode, {
-                        findNavController().navigate(R.id.authToFirestoreOperations)
-                        requireView().showSnack("Successful!")
+                        findNavController().navigate(R.id.authToTodos)
                     }, {
                         requireView().showSnack(it)
                     })
@@ -87,12 +80,26 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
 
             btnAnonymous.setOnClickListener {
                 authOperations.signInAnonymously({
-                    findNavController().navigate(R.id.authToFirestoreOperations)
-                    requireView().showSnack("Successful!")
+                    findNavController().navigate(R.id.authToTodos)
                 }, {
                     requireView().showSnack(it)
                 })
             }
+        }
+    }
+
+    private fun checkEmailAndPassword(
+        onSuccess: (String, String) -> Unit = { _, _ -> },
+        onFailure: () -> Unit = {}
+    ) {
+
+        val email = binding.etEmail.text.toString()
+        val password = binding.etPassword.text.toString()
+
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            onSuccess(email, password)
+        } else {
+            onFailure()
         }
     }
 }
