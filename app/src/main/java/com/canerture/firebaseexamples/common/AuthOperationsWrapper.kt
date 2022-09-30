@@ -10,9 +10,8 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class AuthOperationsWrapper @Inject constructor(private val firebaseAuth: FirebaseAuth) {
+class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
 
     private var verificationId: String? = null
 

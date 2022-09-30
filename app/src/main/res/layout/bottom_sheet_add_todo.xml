@@ -8,6 +8,24 @@
     tools:context=".presentation.firestore.addtodo.AddTodoBottomSheet">
 
     <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/rb_medium_priority"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/selector_medium_priority"
+        android:button="@null"
+        android:gravity="center"
+        android:text="Medium"
+        android:textColor="@color/green"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btn_set_todo"
+        app:layout_constraintEnd_toStartOf="@+id/rb_high_priority"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/rb_low_priority"
+        app:layout_constraintTop_toBottomOf="@+id/img_select_image" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/rb_low_priority"
         android:layout_width="100dp"
         android:layout_height="40dp"
@@ -41,24 +59,6 @@
         app:layout_constraintStart_toEndOf="@+id/rb_medium_priority"
         app:layout_constraintTop_toTopOf="@+id/rb_medium_priority" />
 
-    <com.google.android.material.radiobutton.MaterialRadioButton
-        android:id="@+id/rb_medium_priority"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/selector_medium_priority"
-        android:button="@null"
-        android:gravity="center"
-        android:text="Medium"
-        android:textColor="@color/green"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btn_set_todo"
-        app:layout_constraintEnd_toStartOf="@+id/rb_high_priority"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/rb_low_priority"
-        app:layout_constraintTop_toBottomOf="@+id/til_todo" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_add_todo"
         android:layout_width="0dp"
@@ -68,7 +68,7 @@
         android:text="Add Todo"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_set_todo"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_set_todo"
@@ -80,12 +80,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Todo"
-        app:layout_constraintBottom_toTopOf="@+id/rb_medium_priority"
+        app:layout_constraintBottom_toTopOf="@+id/img_select_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_todo"
@@ -100,7 +99,7 @@
         android:id="@+id/btn_set_todo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:backgroundTint="@color/blue"
         android:text="Set Todo"
@@ -111,4 +110,18 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rb_medium_priority" />
+
+    <ImageView
+        android:id="@+id/img_select_image"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/rb_medium_priority"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_todo"
+        app:srcCompat="@drawable/ic_add_image" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

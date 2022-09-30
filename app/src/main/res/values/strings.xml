@@ -6,4 +6,5 @@
     <string name="title_todos">Todos</string>
     <string name="title_priority">Priority</string>
     <string name="title_done">Done</string>
+    <string name="title_statistics">Statistics</string>
 </resources>

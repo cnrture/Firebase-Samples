@@ -2,8 +2,10 @@ package com.canerture.firebaseexamples.di
 
 import com.canerture.firebaseexamples.common.AuthOperationsWrapper
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
+import com.canerture.firebaseexamples.common.StorageOperationsWrapper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +26,10 @@ object FirebaseModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseStorage() = FirebaseStorage.getInstance()
+
+    @Provides
+    @Singleton
     fun provideFirestoreOperationsWrapper(firestore: FirebaseFirestore) =
         FirestoreOperationsWrapper(firestore)
 
@@ -31,4 +37,9 @@ object FirebaseModule {
     @Singleton
     fun provideAuthOperationsWrapper(firebaseAuth: FirebaseAuth) =
         AuthOperationsWrapper(firebaseAuth)
+
+    @Provides
+    @Singleton
+    fun provideStorageOperationsWrapper(firebaseStorage: FirebaseStorage) =
+        StorageOperationsWrapper(firebaseStorage)
 }

@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_done"
         android:title="@string/title_done" />
 
+    <item
+        android:id="@+id/statisticsFragment"
+        android:icon="@drawable/ic_statistics"
+        android:title="@string/title_statistics" />
+
 </menu>

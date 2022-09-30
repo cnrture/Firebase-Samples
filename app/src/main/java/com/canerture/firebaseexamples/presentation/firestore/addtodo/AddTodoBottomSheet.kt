@@ -1,13 +1,13 @@
 package com.canerture.firebaseexamples.presentation.firestore.addtodo
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
-import com.canerture.firebaseexamples.common.radioButtonCheckedListener
-import com.canerture.firebaseexamples.common.setCheckedTrue
-import com.canerture.firebaseexamples.common.showSnack
+import com.canerture.firebaseexamples.common.*
 import com.canerture.firebaseexamples.databinding.BottomSheetAddTodoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +22,12 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
 
+    @Inject
+    lateinit var storageOperationsWrapper: StorageOperationsWrapper
+
     private var selectedPriority = "Low"
+
+    private var selectedImageBitmap: Bitmap? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,13 +53,20 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
                 val todo = etTodo.text.toString()
 
                 if (todo.isNotEmpty()) {
-                    firestoreOperations.addTodo(todo, selectedPriority, {
-                        this@AddTodoBottomSheet.dismiss()
-                    }, {
-                        dialog?.window?.decorView?.showSnack(it)
-                    })
+                    if (selectedImageBitmap != null) {
+                        storageOperationsWrapper.addImage(
+                            selectedImageBitmap!!,
+                            { imageUrl, imageName ->
+                                addTodo(todo, imageUrl, imageName)
+                            },
+                            {
+                                showSnackBar(it)
+                            })
+                    } else {
+                        addTodo(todo, null, null)
+                    }
                 } else {
-                    dialog?.window?.decorView?.showSnack("Todo must not be empty!")
+                    showSnackBar("Todo must not be empty!")
                 }
             }
 
@@ -63,14 +75,60 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
                 val todo = etTodo.text.toString()
 
                 if (todo.isNotEmpty()) {
-                    firestoreOperations.setTodo(todo, selectedPriority, {
-                        this@AddTodoBottomSheet.dismiss()
-                    }, {
-                        dialog?.window?.decorView?.showSnack(it)
-                    })
+                    if (selectedImageBitmap != null) {
+                        storageOperationsWrapper.addImage(
+                            selectedImageBitmap!!,
+                            { imageUrl, imageName ->
+                                setTodo(todo, imageUrl, imageName)
+                            },
+                            {
+                                showSnackBar(it)
+                            })
+                    } else {
+                        setTodo(todo, null, null)
+                    }
+                } else {
+                    showSnackBar("Todo must not be empty!")
                 }
             }
+
+            imgSelectImage.setOnClickListener {
+
+                val intentToGallery =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+
+                launcher.launch(intentToGallery)
+            }
         }
+    }
+
+    private val launcher = this@AddTodoBottomSheet.resultLauncher({
+        binding.imgSelectImage.visible()
+        binding.imgSelectImage.setImageBitmap(it)
+        selectedImageBitmap = it
+    }, {
+        showSnackBar(it)
+        selectedImageBitmap = null
+    })
+
+    private fun addTodo(todo: String, imageUrl: String?, imageName: String?) {
+        firestoreOperations.addTodo(todo, selectedPriority, imageUrl, imageName, {
+            this@AddTodoBottomSheet.dismiss()
+        }, {
+            showSnackBar(it)
+        })
+    }
+
+    private fun setTodo(todo: String, imageUrl: String?, imageName: String?) {
+        firestoreOperations.setTodo(todo, selectedPriority, imageUrl, imageName, {
+            this@AddTodoBottomSheet.dismiss()
+        }, {
+            showSnackBar(it)
+        })
+    }
+
+    private fun showSnackBar(text: String) {
+        dialog?.window?.decorView?.showSnack(text)
     }
 
     override fun onDestroyView() {

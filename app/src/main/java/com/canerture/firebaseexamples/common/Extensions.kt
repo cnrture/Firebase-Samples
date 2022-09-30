@@ -1,7 +1,14 @@
 package com.canerture.firebaseexamples.common
 
+import android.app.Activity.RESULT_OK
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.os.Build
+import android.provider.MediaStore
 import android.view.View
 import android.widget.RadioButton
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -69,3 +76,39 @@ fun RadioButton.checked(
         }
     }
 }
+
+fun Fragment.resultLauncher(onSuccess: (Bitmap) -> Unit = {}, onFailure: (String) -> Unit = {}) =
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+
+        if (result.resultCode == RESULT_OK) {
+            val resultData = result.data
+
+            if (resultData != null && resultData.data != null) {
+
+                val selectedImageUri = resultData.data
+
+                try {
+                    val selectedImageBitmap = if (Build.VERSION.SDK_INT < 28) {
+                        MediaStore.Images.Media.getBitmap(
+                            requireActivity().contentResolver,
+                            selectedImageUri
+                        )
+                    } else {
+                        selectedImageUri?.let {
+                            val source =
+                                ImageDecoder.createSource(requireActivity().contentResolver, it)
+                            ImageDecoder.decodeBitmap(source)
+                        }
+                    }
+
+                    if (selectedImageBitmap != null) {
+                        onSuccess(selectedImageBitmap)
+                    } else {
+                        onFailure("Something went wrong!")
+                    }
+                } catch (e: Exception) {
+                    onFailure(e.message.orEmpty())
+                }
+            }
+        }
+    }

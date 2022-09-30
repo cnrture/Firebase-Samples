@@ -6,15 +6,17 @@ import com.canerture.firebaseexamples.common.Constants.PRIORITY_MEDIUM
 import com.canerture.firebaseexamples.data.model.Todo
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import javax.inject.Inject
+import com.google.firebase.firestore.QuerySnapshot
 
-class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestore) {
+class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
 
     private val collection = firestore.collection("Todos")
 
     fun addTodo(
         todo: String,
         priority: String,
+        imageUrl: String?,
+        imageName: String?,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
@@ -22,6 +24,8 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         val todoModel = hashMapOf(
             "todo" to todo,
             "priority" to priority,
+            "imageUrl" to imageUrl,
+            "imageName" to imageName,
             "isDone" to false,
             "date" to getDateTimeAsFormattedString()
         )
@@ -34,6 +38,8 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
     fun setTodo(
         todo: String,
         priority: String,
+        imageUrl: String?,
+        imageName: String?,
         onSuccess: () -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
@@ -41,6 +47,8 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         val todoModel = hashMapOf(
             "todo" to todo,
             "priority" to priority,
+            "imageUrl" to imageUrl,
+            "imageName" to imageName,
             "isDone" to false,
             "date" to getDateTimeAsFormattedString()
         )
@@ -78,28 +86,14 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
 
-    fun getTodosOnce(
+    private fun getTodosOnce(
         onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
+        collection.get().addOnSuccessListener { documents ->
 
-        collection.get().addOnSuccessListener {
+            snapshotToList(documents) { onSuccess(it) }
 
-            val tempList = arrayListOf<Todo>()
-
-            it.forEach { document ->
-                tempList.add(
-                    Todo(
-                        document.id,
-                        document.get("todo") as String,
-                        document.get("priority") as String,
-                        document.get("isDone") as Boolean,
-                        document.get("date") as String
-                    )
-                )
-            }
-
-            onSuccess(tempList)
         }.addOnFailureListener {
             onFailure(it.message.orEmpty())
         }
@@ -112,23 +106,7 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
 
         collection.addSnapshotListener { snapshot, error ->
 
-            val tempList = arrayListOf<Todo>()
-
-            snapshot?.let {
-                it.forEach { document ->
-                    tempList.add(
-                        Todo(
-                            document.id,
-                            document.get("todo") as String,
-                            document.get("priority") as String,
-                            document.get("isDone") as Boolean,
-                            document.get("date") as String
-                        )
-                    )
-                }
-
-                onSuccess(tempList)
-            }
+            snapshotToList(snapshot) { onSuccess(it) }
 
             error?.let { onFailure(it.message.orEmpty()) }
         }
@@ -141,23 +119,7 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
 
         collection.whereEqualTo("isDone", true).addSnapshotListener { snapshot, error ->
 
-            val tempList = arrayListOf<Todo>()
-
-            snapshot?.let {
-                it.forEach { document ->
-                    tempList.add(
-                        Todo(
-                            document.id,
-                            document.get("todo") as String,
-                            document.get("priority") as String,
-                            document.get("isDone") as Boolean,
-                            document.get("date") as String
-                        )
-                    )
-                }
-
-                onSuccess(tempList)
-            }
+            snapshotToList(snapshot) { onSuccess(it) }
 
             error?.let { onFailure(it.message.orEmpty()) }
         }
@@ -176,23 +138,7 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
                     return@addSnapshotListener
                 }
 
-                val tempList = arrayListOf<Todo>()
-
-                snapshot?.let {
-                    it.forEach { document ->
-                        tempList.add(
-                            Todo(
-                                document.id,
-                                document.get("todo") as String,
-                                document.get("priority") as String,
-                                document.get("isDone") as Boolean,
-                                document.get("date") as String
-                            )
-                        )
-                    }
-
-                    onSuccess(tempList)
-                }
+                snapshotToList(snapshot) { onSuccess(it) }
             }
     }
 
@@ -209,7 +155,9 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
                     document.get("todo") as String,
                     document.get("priority") as String,
                     document.get("isDone") as Boolean,
-                    document.get("date") as String
+                    document.get("date") as String,
+                    if (document.get("imageUrl") != null) document.get("imageUrl") as String else null,
+                    if (document.get("imageName") != null) document.get("imageName") as String else null
                 )
             )
 
@@ -231,30 +179,29 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         }
     }
 
+    fun deleteImageFromTodo(
+        documentId: String,
+        onSuccess: () -> Unit = {},
+        onFailure: (String) -> Unit = {}
+    ) {
+
+        collection.document(documentId).update(
+            mapOf(
+                "imageUrl" to null,
+                "imageName" to null
+            )
+        )
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it.message.orEmpty()) }
+    }
+
     fun queryTodo(
         query: String,
         onSuccess: (List<Todo>) -> Unit = {},
         onFailure: (String) -> Unit = {}
     ) {
         collection.whereEqualTo("todo", query).get().addOnSuccessListener { documents ->
-
-            val tempList = arrayListOf<Todo>()
-
-            documents?.let {
-                it.forEach { document ->
-                    tempList.add(
-                        Todo(
-                            document.id,
-                            document.get("todo") as String,
-                            document.get("priority") as String,
-                            document.get("isDone") as Boolean,
-                            document.get("date") as String
-                        )
-                    )
-                }
-
-                onSuccess(tempList)
-            }
+            snapshotToList(documents) { onSuccess(it) }
         }.addOnFailureListener {
             onFailure(it.message.orEmpty())
         }
@@ -266,24 +213,7 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
         onFailure: (String) -> Unit = {}
     ) {
         collection.whereEqualTo("priority", priority).get().addOnSuccessListener { documents ->
-
-            val tempList = arrayListOf<Todo>()
-
-            documents?.let {
-                it.forEach { document ->
-                    tempList.add(
-                        Todo(
-                            document.id,
-                            document.get("todo") as String,
-                            document.get("priority") as String,
-                            document.get("isDone") as Boolean,
-                            document.get("date") as String
-                        )
-                    )
-                }
-
-                onSuccess(tempList)
-            }
+            snapshotToList(documents) { onSuccess(it) }
         }.addOnFailureListener {
             onFailure(it.message.orEmpty())
         }
@@ -302,5 +232,31 @@ class FirestoreOperationsWrapper @Inject constructor(firestore: FirebaseFirestor
 
             statistics(done, notDone, lowPriority, mediumPriority, highPriority)
         })
+    }
+
+    private fun snapshotToList(
+        querySnapshot: QuerySnapshot?,
+        list: (ArrayList<Todo>) -> Unit = {}
+    ) {
+
+        val tempList = arrayListOf<Todo>()
+
+        querySnapshot?.let {
+            it.forEach { document ->
+                tempList.add(
+                    Todo(
+                        document.id,
+                        document.get("todo") as String,
+                        document.get("priority") as String,
+                        document.get("isDone") as Boolean,
+                        document.get("date") as String,
+                        if (document.get("imageUrl") != null) document.get("imageUrl") as String else null,
+                        if (document.get("imageName") != null) document.get("imageName") as String else null
+                    )
+                )
+            }
+
+            list(tempList)
+        }
     }
 }

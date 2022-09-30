@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="8dp"
     android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp">
 
@@ -22,53 +22,55 @@
             android:buttonTint="@color/blue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_todo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:lines="1"
             android:text="TextView"
             android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_date"
-            app:layout_constraintEnd_toStartOf="@+id/tv_low_priority"
+            app:layout_constraintEnd_toStartOf="@+id/tv_high_priority"
             app:layout_constraintStart_toEndOf="@+id/cb_done"
-            app:layout_constraintTop_toTopOf="@+id/cb_done"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="@+id/cb_done" />
 
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="TextView"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/cb_done"
-            app:layout_constraintStart_toEndOf="@+id/cb_done"
+            app:layout_constraintStart_toStartOf="@+id/tv_todo"
             app:layout_constraintTop_toBottomOf="@+id/tv_todo" />
 
         <ImageView
             android:id="@+id/img_delete"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/tv_low_priority"
+            app:layout_constraintBottom_toBottomOf="@+id/img_edit"
+            app:layout_constraintEnd_toEndOf="@+id/tv_high_priority"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/img_edit"
-            app:layout_constraintTop_toBottomOf="@+id/tv_low_priority"
+            app:layout_constraintTop_toTopOf="@+id/img_edit"
             app:srcCompat="@drawable/ic_delete" />
 
         <ImageView
             android:id="@+id/img_edit"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/img_delete"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_done"
             app:layout_constraintEnd_toStartOf="@+id/img_delete"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/tv_low_priority"
-            app:layout_constraintTop_toTopOf="@+id/img_delete"
+            app:layout_constraintStart_toStartOf="@+id/tv_high_priority"
+            app:layout_constraintTop_toBottomOf="@+id/tv_high_priority"
             app:srcCompat="@drawable/ic_edit" />
 
         <ImageView
@@ -86,7 +88,6 @@
             android:id="@+id/tv_low_priority"
             android:layout_width="64dp"
             android:layout_height="20dp"
-            android:layout_marginEnd="16dp"
             android:background="@drawable/low_priority_unselected"
             android:button="@null"
             android:gravity="center"
@@ -95,9 +96,10 @@
             android:textSize="10sp"
             android:textStyle="bold"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/img_delete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/tv_medium_priority"
+            app:layout_constraintEnd_toEndOf="@+id/tv_high_priority"
+            app:layout_constraintStart_toStartOf="@+id/tv_high_priority"
+            app:layout_constraintTop_toTopOf="@+id/tv_high_priority" />
 
         <TextView
             android:id="@+id/tv_medium_priority"
@@ -111,15 +113,16 @@
             android:textSize="10sp"
             android:textStyle="bold"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_low_priority"
-            app:layout_constraintEnd_toEndOf="@+id/tv_low_priority"
-            app:layout_constraintStart_toStartOf="@+id/tv_low_priority"
-            app:layout_constraintTop_toTopOf="@+id/tv_low_priority" />
+            app:layout_constraintBottom_toBottomOf="@+id/tv_high_priority"
+            app:layout_constraintEnd_toEndOf="@+id/tv_high_priority"
+            app:layout_constraintStart_toStartOf="@+id/tv_high_priority"
+            app:layout_constraintTop_toTopOf="@+id/tv_high_priority" />
 
         <TextView
             android:id="@+id/tv_high_priority"
             android:layout_width="64dp"
             android:layout_height="20dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/high_priority_unselected"
             android:button="@null"
             android:gravity="center"
@@ -128,10 +131,9 @@
             android:textSize="10sp"
             android:textStyle="bold"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_low_priority"
-            app:layout_constraintEnd_toEndOf="@+id/tv_low_priority"
-            app:layout_constraintStart_toStartOf="@+id/tv_low_priority"
-            app:layout_constraintTop_toTopOf="@+id/tv_low_priority" />
+            app:layout_constraintBottom_toTopOf="@+id/img_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cb_done" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

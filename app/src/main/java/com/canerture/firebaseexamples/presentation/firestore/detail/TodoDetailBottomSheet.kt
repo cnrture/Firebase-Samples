@@ -5,13 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
-import com.canerture.firebaseexamples.common.Constants.PRIORITY_HIGH
-import com.canerture.firebaseexamples.common.Constants.PRIORITY_LOW
-import com.canerture.firebaseexamples.common.Constants.PRIORITY_MEDIUM
-import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
-import com.canerture.firebaseexamples.common.radioButtonCheckedListener
-import com.canerture.firebaseexamples.common.setCheckedTrue
-import com.canerture.firebaseexamples.common.showSnack
+import com.bumptech.glide.Glide
+import com.canerture.firebaseexamples.common.*
 import com.canerture.firebaseexamples.databinding.BottomSheetTodoDetailBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +22,9 @@ class TodoDetailBottomSheet : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
+
+    @Inject
+    lateinit var storageOperationsWrapper: StorageOperationsWrapper
 
     private var selectedPriority = ""
 
@@ -47,33 +45,63 @@ class TodoDetailBottomSheet : BottomSheetDialogFragment() {
                 selectedPriority = it
             }
 
-            firestoreOperations.getTodoByDocumentIdOnce(args.documentId, {
-                etTodo.setText(it.todo)
-                selectedPriority = it.priority ?: PRIORITY_LOW
-                when (it.priority) {
-                    PRIORITY_LOW -> rbLowPriority.setCheckedTrue()
-                    PRIORITY_MEDIUM -> rbMediumPriority.setCheckedTrue()
-                    PRIORITY_HIGH -> rbHighPriority.setCheckedTrue()
+            firestoreOperations.getTodoByDocumentIdOnce(args.documentId, { todoModel ->
+
+                todoModel.imageUrl?.let { imageUrl ->
+                    imgTodoImage.visible()
+                    imgDeleteImage.visible()
+                    Glide.with(imgTodoImage).load(imageUrl).into(imgTodoImage)
+                }
+
+                etTodo.setText(todoModel.todo)
+
+                selectedPriority = todoModel.priority ?: Constants.PRIORITY_LOW
+
+                when (todoModel.priority) {
+                    Constants.PRIORITY_LOW -> rbLowPriority.setCheckedTrue()
+                    Constants.PRIORITY_MEDIUM -> rbMediumPriority.setCheckedTrue()
+                    Constants.PRIORITY_HIGH -> rbHighPriority.setCheckedTrue()
+                }
+
+                btnUpdateData.setOnClickListener {
+
+                    val todo = etTodo.text.toString()
+
+                    if (todo.isNotEmpty()) {
+                        firestoreOperations.updateTodo(todo, selectedPriority, args.documentId, {
+                            this@TodoDetailBottomSheet.dismiss()
+                        }, {
+                            showSnackBar(it)
+                        })
+                    } else {
+                        showSnackBar("Todo must not be empty!")
+                    }
+                }
+
+                imgDeleteImage.setOnClickListener {
+
+                    if (todoModel.imageName != null && todoModel.documentId != null) {
+
+                        storageOperationsWrapper.deleteImage(todoModel.imageName, {
+                            firestoreOperations.deleteImageFromTodo(todoModel.documentId, {
+                                imgTodoImage.gone()
+                                imgDeleteImage.gone()
+                            }, {
+                                showSnackBar(it)
+                            })
+                        }, {
+                            showSnackBar(it)
+                        })
+                    }
                 }
             }, {
-                dialog?.window?.decorView?.showSnack(it)
+                showSnackBar(it)
             })
-
-            btnUpdateData.setOnClickListener {
-
-                val todo = etTodo.text.toString()
-
-                if (todo.isNotEmpty()) {
-                    firestoreOperations.updateTodo(todo, selectedPriority, args.documentId, {
-                        this@TodoDetailBottomSheet.dismiss()
-                    }, {
-                        dialog?.window?.decorView?.showSnack(it)
-                    })
-                } else {
-                    dialog?.window?.decorView?.showSnack("Todo must not be empty!")
-                }
-            }
         }
+    }
+
+    private fun showSnackBar(text: String) {
+        dialog?.window?.decorView?.showSnack(text)
     }
 
     override fun onDestroyView() {

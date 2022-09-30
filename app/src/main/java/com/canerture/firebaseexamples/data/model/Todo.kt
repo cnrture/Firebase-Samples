@@ -9,5 +9,7 @@ data class Todo(
     val todo: String? = null,
     val priority: String? = null,
     val isDone: Boolean = false,
-    val date: String? = null
+    val date: String? = null,
+    val imageUrl: String? = null,
+    val imageName: String? = null,
 ) : Parcelable
