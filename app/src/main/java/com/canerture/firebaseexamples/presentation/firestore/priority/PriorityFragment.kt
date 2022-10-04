@@ -5,12 +5,10 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
-import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
-import com.canerture.firebaseexamples.common.radioButtonCheckedListener
-import com.canerture.firebaseexamples.common.showSnack
-import com.canerture.firebaseexamples.common.viewBinding
+import com.canerture.firebaseexamples.common.*
 import com.canerture.firebaseexamples.databinding.FragmentPriorityBinding
-import com.canerture.firebaseexamples.presentation.firestore.TodosAdapter
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.LoadAdError
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -22,12 +20,15 @@ class PriorityFragment : Fragment(R.layout.fragment_priority) {
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
 
+    @Inject
+    lateinit var adsOperationsWrapper: AdsOperationsWrapper
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
 
-            TodosAdapter().apply {
+            PriorityAdapter().apply {
 
                 listenData(this)
 
@@ -59,22 +60,51 @@ class PriorityFragment : Fragment(R.layout.fragment_priority) {
                     })
                 }
             }
+
+            val request = adsOperationsWrapper.showBannerAds(requireContext())
+            adView.loadAd(request)
+            adView.adListener = object : AdListener() {
+
+                override fun onAdClicked() {
+                    showLogDebug("BannerAds", "onAdClicked")
+                }
+
+                override fun onAdClosed() {
+                    showLogDebug("BannerAds", "onAdClosed")
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    showLogDebug("BannerAds", "onAdFailedToLoad: ${adError.message}")
+                }
+
+                override fun onAdImpression() {
+                    showLogDebug("BannerAds", "onAdImpression")
+                }
+
+                override fun onAdLoaded() {
+                    showLogDebug("BannerAds", "onAdLoaded")
+                }
+
+                override fun onAdOpened() {
+                    showLogDebug("BannerAds", "onAdOpened")
+                }
+            }
         }
     }
 
-    private fun listenData(todosAdapter: TodosAdapter) {
+    private fun listenData(priorityAdapter: PriorityAdapter) {
         firestoreOperations.getTodosRealtime({ list ->
-            todosAdapter.updateList(list)
-            binding.rvTodos.adapter = todosAdapter
+            priorityAdapter.submitList(list)
+            binding.rvPriorityTodos.adapter = priorityAdapter
         }, {
             requireView().showSnack(it)
         })
     }
 
-    private fun getTodoByPriority(priority: String, todosAdapter: TodosAdapter) {
+    private fun getTodoByPriority(priority: String, priorityAdapter: PriorityAdapter) {
         firestoreOperations.getTodoByPriorityOnce(priority, {
-            todosAdapter.updateList(it)
-            binding.rvTodos.adapter = todosAdapter
+            priorityAdapter.submitList(it)
+            binding.rvPriorityTodos.adapter = priorityAdapter
         }, {
             requireView().showSnack(it)
         })

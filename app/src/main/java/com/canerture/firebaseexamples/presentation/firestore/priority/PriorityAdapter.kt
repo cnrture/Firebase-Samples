@@ -1,7 +1,9 @@
-package com.canerture.firebaseexamples.presentation.firestore
+package com.canerture.firebaseexamples.presentation.firestore.priority
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.canerture.firebaseexamples.common.Constants.PRIORITY_HIGH
 import com.canerture.firebaseexamples.common.Constants.PRIORITY_LOW
@@ -10,9 +12,7 @@ import com.canerture.firebaseexamples.common.visible
 import com.canerture.firebaseexamples.data.model.Todo
 import com.canerture.firebaseexamples.databinding.ItemTodoBinding
 
-class TodosAdapter : RecyclerView.Adapter<TodosAdapter.TodoViewHolder>() {
-
-    private val list = ArrayList<Todo>()
+class PriorityAdapter : ListAdapter<Todo, PriorityAdapter.TodoViewHolder>(DiffCallback()) {
 
     var onEditClick: (String) -> Unit = {}
 
@@ -26,7 +26,8 @@ class TodosAdapter : RecyclerView.Adapter<TodosAdapter.TodoViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bind(list[position])
+        val item = getItem(position)
+        holder.bind(item)
     }
 
     inner class TodoViewHolder(private var binding: ItemTodoBinding) :
@@ -65,11 +66,10 @@ class TodosAdapter : RecyclerView.Adapter<TodosAdapter.TodoViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int = list.size
+    private class DiffCallback : DiffUtil.ItemCallback<Todo>() {
+        override fun areItemsTheSame(oldItem: Todo, newItem: Todo) =
+            oldItem.documentId == newItem.documentId
 
-    fun updateList(updatedList: List<Todo>) {
-        list.clear()
-        list.addAll(updatedList)
-        notifyItemRangeInserted(0, updatedList.size)
+        override fun areContentsTheSame(oldItem: Todo, newItem: Todo) = oldItem == newItem
     }
 }

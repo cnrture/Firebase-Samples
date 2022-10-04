@@ -6,11 +6,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
+import com.canerture.firebaseexamples.common.AdsOperationsWrapper
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.common.viewBinding
+import com.canerture.firebaseexamples.data.model.Todo
 import com.canerture.firebaseexamples.databinding.FragmentTodosBinding
-import com.canerture.firebaseexamples.presentation.firestore.TodosAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -22,6 +23,9 @@ class TodosFragment : Fragment(R.layout.fragment_todos) {
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
 
+    @Inject
+    lateinit var adsOperationsWrapper: AdsOperationsWrapper
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -29,7 +33,12 @@ class TodosFragment : Fragment(R.layout.fragment_todos) {
 
             TodosAdapter().apply {
 
-                listenData(this)
+                adsOperationsWrapper.loadNativeAds(requireContext(), {
+                    setNativeAds(it)
+                    listenData(this, true)
+                }, {
+                    listenData(this, false)
+                })
 
                 onDoneClick = { state, documentId ->
                     firestoreOperations.updateDoneState(state, documentId, {
@@ -63,10 +72,10 @@ class TodosFragment : Fragment(R.layout.fragment_todos) {
 
                     override fun onQueryTextChange(query: String?): Boolean {
                         if (query.isNullOrEmpty()) {
-                            listenData(this@apply)
+                            listenData(this@apply, true)
                         } else {
                             firestoreOperations.queryTodo(query, { list ->
-                                this@apply.updateList(list)
+                                this@apply.submitList(list)
                                 binding.rvTodos.adapter = this@apply
                             }, { errorMessage ->
                                 requireView().showSnack(errorMessage)
@@ -83,12 +92,30 @@ class TodosFragment : Fragment(R.layout.fragment_todos) {
         }
     }
 
-    private fun listenData(todosAdapter: TodosAdapter) {
+    private fun listenData(todosAdapter: TodosAdapter, hasNativeAd: Boolean) {
         firestoreOperations.getNotDoneTodosRealtime({ list ->
-            todosAdapter.updateList(list)
-            binding.rvTodos.adapter = todosAdapter
+            if (hasNativeAd) {
+                todosAdapter.submitList(addNullToArray(list))
+                binding.rvTodos.adapter = todosAdapter
+            } else {
+                todosAdapter.submitList(list)
+                binding.rvTodos.adapter = todosAdapter
+            }
         }, {
             requireView().showSnack(it)
         })
     }
+
+    private fun addNullToArray(data: List<Todo>): List<Todo?> {
+        val newData = arrayListOf<Todo?>()
+        for (i in data.indices) {
+            if (i % 3 == 0) {
+                if (i != 0 && i != data.size - 1)
+                    newData.add(null)
+            }
+            newData.add(data[i])
+        }
+        return newData
+    }
+
 }

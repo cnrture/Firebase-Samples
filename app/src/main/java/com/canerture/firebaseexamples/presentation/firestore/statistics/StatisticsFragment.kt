@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.canerture.firebaseexamples.R
+import com.canerture.firebaseexamples.common.AdsOperationsWrapper
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.databinding.FragmentStatisticsBinding
@@ -23,8 +24,15 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
 
+    @Inject
+    lateinit var adsOperationsWrapper: AdsOperationsWrapper
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adsOperationsWrapper.loadInterstitialAd(requireContext()) {
+            adsOperationsWrapper.showInterstitial(requireActivity())
+        }
 
         with(binding) {
 

@@ -5,11 +5,11 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
+import com.canerture.firebaseexamples.common.AdsOperationsWrapper
 import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.databinding.FragmentDoneBinding
-import com.canerture.firebaseexamples.presentation.firestore.TodosAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,16 +21,23 @@ class DoneFragment : Fragment(R.layout.fragment_done) {
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
 
+    @Inject
+    lateinit var adsOperationsWrapper: AdsOperationsWrapper
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adsOperationsWrapper.loadRewardedAds(requireContext()) {
+            adsOperationsWrapper.showRewardedAds(requireActivity())
+        }
 
         with(binding) {
 
             firestoreOperations.getDoneTodosRealtime({ list ->
 
-                TodosAdapter().apply {
+                DoneAdapter().apply {
 
-                    updateList(list)
+                    submitList(list)
                     rvTodos.adapter = this
 
                     onDoneClick = { state, documentId ->

@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,6 +14,8 @@ import com.google.android.material.snackbar.Snackbar
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+
+fun showLogDebug(tag: String, msg: String) = Log.d(tag, msg)
 
 fun View.showSnack(text: String) = Snackbar.make(this, text, 1000).show()
 
