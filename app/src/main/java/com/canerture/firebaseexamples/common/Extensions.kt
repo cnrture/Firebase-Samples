@@ -1,6 +1,11 @@
 package com.canerture.firebaseexamples.common
 
 import android.app.Activity.RESULT_OK
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
@@ -9,7 +14,11 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
+import com.canerture.firebaseexamples.R
+import com.canerture.firebaseexamples.common.Constants.NOTIFICATION_ID
+import com.canerture.firebaseexamples.presentation.MainActivity
 import com.google.android.material.snackbar.Snackbar
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -115,3 +124,38 @@ fun Fragment.resultLauncher(onSuccess: (Bitmap) -> Unit = {}, onFailure: (String
             }
         }
     }
+
+fun showNotification(context: Context, title: String, description: String) {
+
+    val contentPendingIntent = PendingIntent.getActivity(
+        context,
+        NOTIFICATION_ID,
+        Intent(context, MainActivity::class.java),
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) PendingIntent.FLAG_IMMUTABLE else 0
+    )
+
+    val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channel = NotificationChannel(
+            context.getString(R.string.notification_channel_id),
+            context.getString(R.string.notification_channel_name),
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    val builder = NotificationCompat.Builder(
+        context,
+        context.getString(R.string.notification_channel_id)
+    )
+        .setSmallIcon(R.drawable.ic_check)
+        .setContentTitle(title)
+        .setContentText(description)
+        .setContentIntent(contentPendingIntent)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setAutoCancel(true)
+
+    notificationManager.notify(NOTIFICATION_ID, builder.build())
+}

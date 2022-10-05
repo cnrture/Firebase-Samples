@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.presentation.firestore.priority
+package com.canerture.firebaseexamples.presentation.priority
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

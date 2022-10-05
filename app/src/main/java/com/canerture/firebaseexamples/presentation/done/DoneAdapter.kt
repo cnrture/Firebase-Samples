@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.presentation.firestore.done
+package com.canerture.firebaseexamples.presentation.done
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

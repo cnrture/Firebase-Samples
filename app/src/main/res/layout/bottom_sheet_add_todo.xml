@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="36dp"
-    tools:context=".presentation.firestore.addtodo.AddTodoBottomSheet">
+    tools:context=".presentation.addtodo.AddTodoBottomSheet">
 
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/rb_medium_priority"

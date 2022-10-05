@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.presentation.firestore.addtodo
+package com.canerture.firebaseexamples.presentation.addtodo
 
 import android.content.Intent
 import android.graphics.Bitmap

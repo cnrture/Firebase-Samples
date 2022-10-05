@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.presentation.firestore.priority
+package com.canerture.firebaseexamples.presentation.priority
 
 import android.os.Bundle
 import android.view.View
@@ -45,10 +45,7 @@ class PriorityFragment : Fragment(R.layout.fragment_priority) {
                 }
 
                 onEditClick = { documentId ->
-                    val action =
-                        PriorityFragmentDirections.priorityToDetail(
-                            documentId
-                        )
+                    val action = PriorityFragmentDirections.priorityToDetail(documentId)
                     findNavController().navigate(action)
                 }
 

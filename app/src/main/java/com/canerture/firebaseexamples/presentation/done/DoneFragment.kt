@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.presentation.firestore.done
+package com.canerture.firebaseexamples.presentation.done
 
 import android.os.Bundle
 import android.view.View
@@ -49,10 +49,7 @@ class DoneFragment : Fragment(R.layout.fragment_done) {
                     }
 
                     onEditClick = { documentId ->
-                        val action =
-                            DoneFragmentDirections.doneToDetail(
-                                documentId
-                            )
+                        val action = DoneFragmentDirections.doneToDetail(documentId)
                         findNavController().navigate(action)
                     }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FirebaseExamples</string>
+    <string name="app_name">Firebase Samples</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -7,4 +7,7 @@
     <string name="title_priority">Priority</string>
     <string name="title_done">Done</string>
     <string name="title_statistics">Statistics</string>
+
+    <string name="notification_channel_id">firebase_samples_channel</string>
+    <string name="notification_channel_name">FirebaseSamples</string>
 </resources>

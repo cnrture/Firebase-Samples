@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.presentation.firestore.statistics
+package com.canerture.firebaseexamples.presentation.statistics
 
 import android.graphics.Color
 import android.os.Bundle

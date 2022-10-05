@@ -9,4 +9,6 @@ object Constants {
     const val PRIORITY_MEDIUM = "Medium"
     const val PRIORITY_HIGH = "High"
 
+    const val NOTIFICATION_ID = 0
+
 }

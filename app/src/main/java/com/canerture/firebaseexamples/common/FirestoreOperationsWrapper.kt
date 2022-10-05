@@ -133,12 +133,9 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
         collection.whereEqualTo("isDone", false).orderBy("date", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
 
-                if (error != null) {
-                    onFailure(error.message.orEmpty())
-                    return@addSnapshotListener
-                }
-
                 snapshotToList(snapshot) { onSuccess(it) }
+
+                error?.let { onFailure(it.message.orEmpty()) }
             }
     }
 

@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.presentation.firestore.detail
+package com.canerture.firebaseexamples.presentation.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater

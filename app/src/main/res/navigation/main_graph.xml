@@ -17,7 +17,7 @@
     </fragment>
     <dialog
         android:id="@+id/todoDetailBottomSheet"
-        android:name="com.canerture.firebaseexamples.presentation.firestore.detail.TodoDetailBottomSheet"
+        android:name="com.canerture.firebaseexamples.presentation.detail.TodoDetailBottomSheet"
         android:label="ContactDetailBottomSheet"
         tools:layout="@layout/bottom_sheet_todo_detail">
         <argument
@@ -26,17 +26,17 @@
     </dialog>
     <dialog
         android:id="@+id/addTodoBottomSheet"
-        android:name="com.canerture.firebaseexamples.presentation.firestore.addtodo.AddTodoBottomSheet"
+        android:name="com.canerture.firebaseexamples.presentation.addtodo.AddTodoBottomSheet"
         android:label="bottom_sheet_add_todo"
         tools:layout="@layout/bottom_sheet_add_todo" />
     <fragment
         android:id="@+id/statisticsFragment"
-        android:name="com.canerture.firebaseexamples.presentation.firestore.statistics.StatisticsFragment"
+        android:name="com.canerture.firebaseexamples.presentation.statistics.StatisticsFragment"
         android:label="fragment_statistics"
         tools:layout="@layout/fragment_statistics" />
     <fragment
         android:id="@+id/todosFragment"
-        android:name="com.canerture.firebaseexamples.presentation.firestore.todos.TodosFragment"
+        android:name="com.canerture.firebaseexamples.presentation.todos.TodosFragment"
         android:label="TodosFragment"
         tools:layout="@layout/fragment_todos">
         <action
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/priorityFragment"
-        android:name="com.canerture.firebaseexamples.presentation.firestore.priority.PriorityFragment"
+        android:name="com.canerture.firebaseexamples.presentation.priority.PriorityFragment"
         android:label="PriorityFragment"
         tools:layout="@layout/fragment_priority">
         <action
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/doneFragment"
-        android:name="com.canerture.firebaseexamples.presentation.firestore.done.DoneFragment"
+        android:name="com.canerture.firebaseexamples.presentation.done.DoneFragment"
         android:label="fragment_done"
         tools:layout="@layout/fragment_done">
         <action
