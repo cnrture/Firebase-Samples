@@ -106,9 +106,4 @@ class TodosFragment : Fragment(R.layout.fragment_todos) {
         }
         return newData
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-    }
 }

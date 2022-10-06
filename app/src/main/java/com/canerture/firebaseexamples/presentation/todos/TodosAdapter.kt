@@ -106,15 +106,15 @@ class TodosAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(DiffCallback()) 
 
             with(binding) {
                 nativeAd?.let {
-                    nativeAdView.mediaView = binding.adMedia
-                    nativeAdView.headlineView = binding.adHeadline
-                    nativeAdView.bodyView = binding.adBody
-                    nativeAdView.callToActionView = binding.adBtnAction
-                    nativeAdView.iconView = binding.adAppIcon
-                    nativeAdView.priceView = binding.adPrice
-                    nativeAdView.starRatingView = binding.adStars
-                    nativeAdView.storeView = binding.adStore
-                    nativeAdView.advertiserView = binding.adAdvertiser
+                    nativeAdView.mediaView = adMedia
+                    nativeAdView.headlineView = adHeadline
+                    nativeAdView.bodyView = adBody
+                    nativeAdView.callToActionView = adBtnAction
+                    nativeAdView.iconView = adAppIcon
+                    nativeAdView.priceView = adPrice
+                    nativeAdView.starRatingView = adStars
+                    nativeAdView.storeView = adStore
+                    nativeAdView.advertiserView = adAdvertiser
                     nativeAdView.mediaView?.setMediaContent(it.mediaContent!!)
                     nativeAdView.mediaView?.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                     (nativeAdView.headlineView as TextView).text = it.headline

@@ -23,7 +23,6 @@ class AdsOperationsWrapper {
             setAdSize(AdSize.BANNER)
             adUnitId = "ca-app-pub-3940256099942544/6300978111"
         }
-
         return AdRequest.Builder().build()
     }
 

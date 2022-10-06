@@ -11,4 +11,10 @@ object Constants {
 
     const val NOTIFICATION_ID = 0
 
+    const val EMPTY = "empty"
+    const val SCREEN_TODOS = "todos"
+    const val SCREEN_DONE = "done"
+    const val SCREEN_PRIORITY = "priority"
+    const val SCREEN_STATISTICS = "statistics"
+
 }

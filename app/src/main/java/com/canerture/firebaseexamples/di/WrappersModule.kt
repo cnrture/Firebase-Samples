@@ -1,9 +1,6 @@
 package com.canerture.firebaseexamples.di
 
-import com.canerture.firebaseexamples.common.AdsOperationsWrapper
-import com.canerture.firebaseexamples.common.AuthOperationsWrapper
-import com.canerture.firebaseexamples.common.FirestoreOperationsWrapper
-import com.canerture.firebaseexamples.common.StorageOperationsWrapper
+import com.canerture.firebaseexamples.common.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -35,4 +32,8 @@ object WrappersModule {
     @Provides
     @Singleton
     fun provideAdsOperationsWrapper() = AdsOperationsWrapper()
+
+    @Provides
+    @Singleton
+    fun provideDynamicLinksOperationsWrapper() = DynamicLinksOperationsWrapper()
 }

@@ -14,6 +14,21 @@
             app:destination="@id/todosFragment"
             app:popUpTo="@id/authFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/authToPriority"
+            app:destination="@id/priorityFragment"
+            app:popUpTo="@id/authFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/authToDone"
+            app:destination="@id/doneFragment"
+            app:popUpTo="@id/authFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/authToStatistics"
+            app:destination="@id/statisticsFragment"
+            app:popUpTo="@id/authFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <dialog
         android:id="@+id/todoDetailBottomSheet"
