@@ -13,7 +13,7 @@ class DynamicLinksOperationsWrapper {
     ) {
         Firebase.dynamicLinks.getDynamicLink(intent)
             .addOnSuccessListener { pendingDynamicLinkData ->
-                pendingDynamicLinkData.link?.lastPathSegment?.let {
+                pendingDynamicLinkData?.link?.lastPathSegment?.let {
                     onSuccess(it)
                 }
             }.addOnFailureListener { e ->
