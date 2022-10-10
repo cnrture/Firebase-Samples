@@ -54,19 +54,19 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
 
                 if (todo.isNotEmpty()) {
                     if (selectedImageBitmap != null) {
-                        storageOperationsWrapper.addImage(
-                            selectedImageBitmap!!,
-                            { imageUrl, imageName ->
+                        storageOperationsWrapper.addImage(selectedImageBitmap!!,
+                            onSuccess = { imageUrl, imageName ->
                                 addTodo(todo, imageUrl, imageName)
                             },
-                            {
-                                showSnackBar(it)
-                            })
+                            onFailure = {
+                                dialog?.showSnack(it)
+                            }
+                        )
                     } else {
                         addTodo(todo, null, null)
                     }
                 } else {
-                    showSnackBar("Todo must not be empty!")
+                    dialog?.showSnack("Todo must not be empty!")
                 }
             }
 
@@ -76,19 +76,19 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
 
                 if (todo.isNotEmpty()) {
                     if (selectedImageBitmap != null) {
-                        storageOperationsWrapper.addImage(
-                            selectedImageBitmap!!,
-                            { imageUrl, imageName ->
+                        storageOperationsWrapper.addImage(selectedImageBitmap!!,
+                            onSuccess = { imageUrl, imageName ->
                                 setTodo(todo, imageUrl, imageName)
                             },
-                            {
-                                showSnackBar(it)
-                            })
+                            onFailure = {
+                                dialog?.showSnack(it)
+                            }
+                        )
                     } else {
                         setTodo(todo, null, null)
                     }
                 } else {
-                    showSnackBar("Todo must not be empty!")
+                    dialog?.showSnack("Todo must not be empty!")
                 }
             }
 
@@ -102,33 +102,38 @@ class AddTodoBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private val launcher = this@AddTodoBottomSheet.resultLauncher({
-        binding.imgSelectImage.visible()
-        binding.imgSelectImage.setImageBitmap(it)
-        selectedImageBitmap = it
-    }, {
-        showSnackBar(it)
-        selectedImageBitmap = null
-    })
+    private val launcher = this@AddTodoBottomSheet.resultLauncher(
+        onSuccess = {
+            binding.imgSelectImage.visible()
+            binding.imgSelectImage.setImageBitmap(it)
+            selectedImageBitmap = it
+        },
+        onFailure = {
+            dialog?.showSnack(it)
+            selectedImageBitmap = null
+        }
+    )
 
     private fun addTodo(todo: String, imageUrl: String?, imageName: String?) {
-        firestoreOperations.addTodo(todo, selectedPriority, imageUrl, imageName, {
-            this@AddTodoBottomSheet.dismiss()
-        }, {
-            showSnackBar(it)
-        })
+        firestoreOperations.addTodo(todo, selectedPriority, imageUrl, imageName,
+            onSuccess = {
+                this@AddTodoBottomSheet.dismiss()
+            },
+            onFailure = {
+                dialog?.showSnack(it)
+            }
+        )
     }
 
     private fun setTodo(todo: String, imageUrl: String?, imageName: String?) {
-        firestoreOperations.setTodo(todo, selectedPriority, imageUrl, imageName, {
-            this@AddTodoBottomSheet.dismiss()
-        }, {
-            showSnackBar(it)
-        })
-    }
-
-    private fun showSnackBar(text: String) {
-        dialog?.window?.decorView?.showSnack(text)
+        firestoreOperations.setTodo(todo, selectedPriority, imageUrl, imageName,
+            onSuccess = {
+                this@AddTodoBottomSheet.dismiss()
+            },
+            onFailure = {
+                dialog?.showSnack(it)
+            }
+        )
     }
 
     override fun onDestroyView() {

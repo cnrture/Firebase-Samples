@@ -35,16 +35,18 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
         authOperations.checkCurrentUser {
 
-            dynamicLinksOperationsWrapper.subscribeDynamicLinks(requireActivity().intent, {
-                when (it) {
-                    SCREEN_TODOS -> findNavController().navigate(R.id.authToTodos)
-                    SCREEN_PRIORITY -> findNavController().navigate(R.id.authToPriority)
-                    SCREEN_DONE -> findNavController().navigate(R.id.authToDone)
-                    SCREEN_STATISTICS -> findNavController().navigate(R.id.authToStatistics)
-                }
-            }, {
-                findNavController().navigate(R.id.authToTodos)
-            })
+            dynamicLinksOperationsWrapper.subscribeDynamicLinks(requireActivity().intent,
+                onSuccess = {
+                    when (it) {
+                        SCREEN_TODOS -> findNavController().navigate(R.id.authToTodos)
+                        SCREEN_PRIORITY -> findNavController().navigate(R.id.authToPriority)
+                        SCREEN_DONE -> findNavController().navigate(R.id.authToDone)
+                        SCREEN_STATISTICS -> findNavController().navigate(R.id.authToStatistics)
+                    }
+                },
+                onFailure = {
+                    findNavController().navigate(R.id.authToTodos)
+                })
         }
 
         with(binding) {

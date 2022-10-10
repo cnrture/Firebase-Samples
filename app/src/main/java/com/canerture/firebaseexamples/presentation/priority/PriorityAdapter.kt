@@ -12,13 +12,11 @@ import com.canerture.firebaseexamples.common.visible
 import com.canerture.firebaseexamples.data.model.Todo
 import com.canerture.firebaseexamples.databinding.ItemTodoBinding
 
-class PriorityAdapter : ListAdapter<Todo, PriorityAdapter.TodoViewHolder>(DiffCallback()) {
-
-    var onEditClick: (String) -> Unit = {}
-
-    var onDoneClick: (Boolean, String) -> Unit = { _, _ -> }
-
-    var onDeleteClick: (String) -> Unit = {}
+class PriorityAdapter(
+    val onEditClick: (String) -> Unit,
+    val onDoneClick: (String) -> Unit,
+    val onDeleteClick: (String) -> Unit
+) : ListAdapter<Todo, PriorityAdapter.TodoViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val binding = ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -50,8 +48,8 @@ class PriorityAdapter : ListAdapter<Todo, PriorityAdapter.TodoViewHolder>(DiffCa
 
                     cbDone.isChecked = item.isDone
 
-                    cbDone.setOnCheckedChangeListener { _, isChecked ->
-                        onDoneClick(isChecked, documentId)
+                    cbDone.setOnCheckedChangeListener { _, _ ->
+                        onDoneClick(documentId)
                     }
 
                     imgEdit.setOnClickListener {

@@ -17,8 +17,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
         priority: String,
         imageUrl: String?,
         imageName: String?,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         val todoModel = hashMapOf(
@@ -40,8 +40,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
         priority: String,
         imageUrl: String?,
         imageName: String?,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         val todoModel = hashMapOf(
@@ -62,8 +62,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
         todo: String,
         priority: String,
         documentId: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         collection.document(documentId).update(
             mapOf(
@@ -75,20 +75,29 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
 
-    fun updateDoneState(
-        isDone: Boolean,
+    fun setDone(
         documentId: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
-        collection.document(documentId).update("isDone", isDone)
+        collection.document(documentId).update("isDone", true)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it.message.orEmpty()) }
+    }
+
+    fun setNotDone(
+        documentId: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        collection.document(documentId).update("isDone", false)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }
 
     private fun getTodosOnce(
-        onSuccess: (List<Todo>) -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: (List<Todo>) -> Unit,
+        onFailure: (String) -> Unit
     ) {
         collection.get().addOnSuccessListener { documents ->
 
@@ -100,8 +109,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
     }
 
     fun getTodosRealtime(
-        onSuccess: (List<Todo>) -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: (List<Todo>) -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         collection.addSnapshotListener { snapshot, error ->
@@ -113,8 +122,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
     }
 
     fun getDoneTodosRealtime(
-        onSuccess: (List<Todo>) -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: (List<Todo>) -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         collection.whereEqualTo("isDone", true).addSnapshotListener { snapshot, error ->
@@ -126,8 +135,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
     }
 
     fun getNotDoneTodosRealtime(
-        onSuccess: (List<Todo>) -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: (List<Todo>) -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         collection.whereEqualTo("isDone", false).orderBy("date", Query.Direction.DESCENDING)
@@ -141,8 +150,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
 
     fun getTodoByDocumentIdOnce(
         documentId: String,
-        onSuccess: (Todo) -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: (Todo) -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         collection.document(documentId).get().addOnSuccessListener { document ->
@@ -165,8 +174,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
 
     fun deleteTodo(
         documentId: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         collection.document(documentId).delete().addOnSuccessListener {
@@ -178,8 +187,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
 
     fun deleteImageFromTodo(
         documentId: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         collection.document(documentId).update(
@@ -194,8 +203,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
 
     fun queryTodo(
         query: String,
-        onSuccess: (List<Todo>) -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: (List<Todo>) -> Unit,
+        onFailure: (String) -> Unit
     ) {
         collection.whereEqualTo("todo", query).get().addOnSuccessListener { documents ->
             snapshotToList(documents) { onSuccess(it) }
@@ -206,8 +215,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
 
     fun getTodoByPriorityOnce(
         priority: String,
-        onSuccess: (List<Todo>) -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: (List<Todo>) -> Unit,
+        onFailure: (String) -> Unit
     ) {
         collection.whereEqualTo("priority", priority).get().addOnSuccessListener { documents ->
             snapshotToList(documents) { onSuccess(it) }
@@ -217,7 +226,8 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
     }
 
     fun getStatistics(
-        statistics: (Int, Int, Int, Int, Int) -> Unit = { _, _, _, _, _ -> }
+        onSuccess: (Int, Int, Int, Int, Int) -> Unit = { _, _, _, _, _ -> },
+        onFailure: (String) -> Unit
     ) {
 
         getTodosOnce({ todoList ->
@@ -227,13 +237,15 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
             val mediumPriority = todoList.filter { it.priority == PRIORITY_MEDIUM }.size
             val highPriority = todoList.filter { it.priority == PRIORITY_HIGH }.size
 
-            statistics(done, notDone, lowPriority, mediumPriority, highPriority)
+            onSuccess(done, notDone, lowPriority, mediumPriority, highPriority)
+        }, {
+            onFailure(it)
         })
     }
 
     private fun snapshotToList(
         querySnapshot: QuerySnapshot?,
-        list: (ArrayList<Todo>) -> Unit = {}
+        list: (ArrayList<Todo>) -> Unit
     ) {
 
         val tempList = arrayListOf<Todo>()

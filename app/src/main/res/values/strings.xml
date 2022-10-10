@@ -10,4 +10,7 @@
 
     <string name="notification_channel_id">firebase_samples_channel</string>
     <string name="notification_channel_name">FirebaseSamples</string>
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
 </resources>

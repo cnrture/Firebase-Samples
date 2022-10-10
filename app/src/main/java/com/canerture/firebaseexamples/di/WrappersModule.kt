@@ -3,6 +3,7 @@ package com.canerture.firebaseexamples.di
 import com.canerture.firebaseexamples.common.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
@@ -36,4 +37,9 @@ object WrappersModule {
     @Provides
     @Singleton
     fun provideDynamicLinksOperationsWrapper() = DynamicLinksOperationsWrapper()
+
+    @Provides
+    @Singleton
+    fun provideRemoteConfigWrapper(firebaseRemoteConfig: FirebaseRemoteConfig) =
+        RemoteConfigWrapper(firebaseRemoteConfig)
 }

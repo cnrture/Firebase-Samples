@@ -8,18 +8,22 @@ class DynamicLinksOperationsWrapper {
 
     fun subscribeDynamicLinks(
         intent: Intent,
-        onSuccess: (String) -> Unit = {},
-        onFailure: () -> Unit = {}
+        onSuccess: (String) -> Unit,
+        onFailure: () -> Unit
     ) {
         Firebase.dynamicLinks.getDynamicLink(intent)
             .addOnSuccessListener { pendingDynamicLinkData ->
-                pendingDynamicLinkData?.link?.lastPathSegment?.let {
-                    onSuccess(it)
+                val lastPathSegment = pendingDynamicLinkData?.link?.lastPathSegment
+
+                if (lastPathSegment != null) {
+                    onSuccess(lastPathSegment)
+                } else {
+                    onFailure()
                 }
             }.addOnFailureListener { e ->
-            onFailure()
-            showLogDebug(TAG, "getDynamicLink:onFailure: $e")
-        }
+                onFailure()
+                showLogDebug(TAG, "getDynamicLink:onFailure: $e")
+            }
     }
 
     companion object {

@@ -18,8 +18,8 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
     fun signUpWithEmailAndPassword(
         email: String,
         password: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
@@ -34,8 +34,8 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
     fun signInWithEmailAndPassword(
         email: String,
         password: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
@@ -49,9 +49,9 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
 
     fun sendVerificationCode(
         phoneNumber: String,
-        onCodeSent: () -> Unit = {},
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onCodeSent: () -> Unit,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(phoneNumber)
@@ -68,7 +68,6 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
 
                 override fun onVerificationFailed(e: FirebaseException) {
                     if (e is FirebaseAuthInvalidCredentialsException) {
-
                         onFailure("Invalid Request!")
                     } else if (e is FirebaseTooManyRequestsException) {
                         onFailure("Too many request!")
@@ -90,11 +89,11 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
 
     fun verifyCode(
         verifyCode: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
-        verificationId?.let { verifId ->
-            val credential = PhoneAuthProvider.getCredential(verifId, verifyCode)
+        verificationId?.let { verifyId ->
+            val credential = PhoneAuthProvider.getCredential(verifyId, verifyCode)
             signInWithCredential(credential, {
                 onSuccess()
             }, {
@@ -105,8 +104,8 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
 
     private fun signInWithCredential(
         credential: PhoneAuthCredential,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult ->
             authResult.user?.let {
@@ -118,8 +117,8 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
     }
 
     fun signInAnonymously(
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         firebaseAuth.signInAnonymously().addOnSuccessListener { authResult ->
             authResult.user?.let {
@@ -133,8 +132,8 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
     fun signInWithGoogle(
         activity: Activity,
         oneTapClient: SignInClient,
-        onSuccess: (IntentSenderRequest) -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: (IntentSenderRequest) -> Unit,
+        onFailure: (String) -> Unit
     ) {
 
         val signInRequest = BeginSignInRequest.builder()
@@ -165,8 +164,8 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
 
     fun signInWithGithub(
         activity: Activity,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         val provider = OAuthProvider.newBuilder("github.com")
         provider.addCustomParameter("login", "")
@@ -184,8 +183,8 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
 
     fun signInWithTwitter(
         activity: Activity,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         val provider = OAuthProvider.newBuilder("twitter.com")
         provider.addCustomParameter("lang", "")
@@ -201,7 +200,7 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
             }
     }
 
-    fun checkCurrentUser(currentUser: (FirebaseUser) -> Unit = {}) {
+    fun checkCurrentUser(currentUser: (FirebaseUser) -> Unit) {
         firebaseAuth.currentUser?.let {
             currentUser(it)
         }

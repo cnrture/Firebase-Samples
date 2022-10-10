@@ -1,6 +1,7 @@
 package com.canerture.firebaseexamples.common
 
 import android.app.Activity.RESULT_OK
+import android.app.Dialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -28,6 +29,8 @@ fun showLogDebug(tag: String, msg: String) = Log.d(tag, msg)
 
 fun View.showSnack(text: String) = Snackbar.make(this, text, 1000).show()
 
+fun Dialog.showSnack(text: String) = window?.decorView?.showSnack(text)
+
 fun getDateTimeAsFormattedString(): String {
     val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale("tr"))
     val date = Date()
@@ -54,19 +57,18 @@ fun radioButtonCheckedListener(
     rbOne: RadioButton,
     rbTwo: RadioButton,
     rbThree: RadioButton,
-    selectedPriority: (String) -> Unit = {}
+    selectedPriority: (String) -> Unit
 ) {
-    rbOne.checked(rbTwo, rbThree) { selectedPriority(it) }
-    rbTwo.checked(rbOne, rbThree) { selectedPriority(it) }
-    rbThree.checked(rbOne, rbTwo) { selectedPriority(it) }
+    rbOne.check(rbTwo, rbThree) { selectedPriority(it) }
+    rbTwo.check(rbOne, rbThree) { selectedPriority(it) }
+    rbThree.check(rbOne, rbTwo) { selectedPriority(it) }
 }
 
-fun RadioButton.checked(
+fun RadioButton.check(
     otherRbOne: RadioButton,
     otherRbTwo: RadioButton,
-    selectedPriority: (String) -> Unit = {}
+    selectedPriority: (String) -> Unit
 ) {
-
     setOnClickListener {
 
         when (it.id) {

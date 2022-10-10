@@ -13,7 +13,7 @@ class StorageOperationsWrapper(storage: FirebaseStorage) {
     fun addImage(
         bitmap: Bitmap,
         onSuccess: (String, String) -> Unit = { _, _ -> },
-        onFailure: (String) -> Unit = {}
+        onFailure: (String) -> Unit
     ) {
         val uuid = UUID.randomUUID()
         val imageName = "$uuid.jpg"
@@ -35,8 +35,8 @@ class StorageOperationsWrapper(storage: FirebaseStorage) {
 
     fun deleteImage(
         imageName: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (String) -> Unit = {}
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
         val reference = imagesRef?.child(imageName)
 

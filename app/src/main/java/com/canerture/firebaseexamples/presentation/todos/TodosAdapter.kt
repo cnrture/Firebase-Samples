@@ -18,15 +18,13 @@ import com.canerture.firebaseexamples.databinding.ItemTodoBinding
 import com.canerture.firebaseexamples.databinding.NativeAdLayoutBinding
 import com.google.android.gms.ads.nativead.NativeAd
 
-class TodosAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(DiffCallback()) {
+class TodosAdapter(
+    val onEditClick: (String) -> Unit,
+    val onDoneClick: (String) -> Unit,
+    val onDeleteClick: (String) -> Unit
+) : ListAdapter<Todo, RecyclerView.ViewHolder>(DiffCallback()) {
 
     private var nativeAd: NativeAd? = null
-
-    var onEditClick: (String) -> Unit = {}
-
-    var onDoneClick: (Boolean, String) -> Unit = { _, _ -> }
-
-    var onDeleteClick: (String) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -83,8 +81,8 @@ class TodosAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(DiffCallback()) 
 
                     cbDone.isChecked = item.isDone
 
-                    cbDone.setOnCheckedChangeListener { _, isChecked ->
-                        onDoneClick(isChecked, documentId)
+                    cbDone.setOnCheckedChangeListener { _, _ ->
+                        onDoneClick(documentId)
                     }
 
                     imgEdit.setOnClickListener {

@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.*
 import com.canerture.firebaseexamples.databinding.FragmentPriorityBinding
+import com.canerture.firebaseexamples.presentation.done.DoneFragmentDirections
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.LoadAdError
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,33 +29,38 @@ class PriorityFragment : Fragment(R.layout.fragment_priority) {
 
         with(binding) {
 
-            PriorityAdapter().apply {
+            PriorityAdapter(
+                onEditClick = {
+                    val action = DoneFragmentDirections.doneToDetail(it)
+                    findNavController().navigate(action)
+                },
+
+                onDeleteClick = { documentId ->
+                    firestoreOperations.deleteTodo(documentId,
+                        onSuccess = {
+                            requireView().showSnack("Data deleted!")
+                        }, onFailure = {
+                            requireView().showSnack(it)
+                        }
+                    )
+                },
+
+                onDoneClick = { documentId ->
+                    firestoreOperations.setDone(documentId,
+                        onSuccess = {
+                            requireView().showSnack("Done State Updated!")
+                        },
+                        onFailure = {
+                            requireView().showSnack(it)
+                        }
+                    )
+                }
+            ).apply {
 
                 listenData(this)
 
                 radioButtonCheckedListener(rbLowPriority, rbMediumPriority, rbHighPriority) {
                     getTodoByPriority(it, this)
-                }
-
-                onDoneClick = { state, documentId ->
-                    firestoreOperations.updateDoneState(state, documentId, {
-                        requireView().showSnack("Done State Updated!")
-                    }, {
-                        requireView().showSnack(it)
-                    })
-                }
-
-                onEditClick = { documentId ->
-                    val action = PriorityFragmentDirections.priorityToDetail(documentId)
-                    findNavController().navigate(action)
-                }
-
-                onDeleteClick = { documentId ->
-                    firestoreOperations.deleteTodo(documentId, {
-                        requireView().showSnack("Data deleted!")
-                    }, {
-                        requireView().showSnack(it)
-                    })
                 }
             }
 
@@ -90,20 +96,26 @@ class PriorityFragment : Fragment(R.layout.fragment_priority) {
     }
 
     private fun listenData(priorityAdapter: PriorityAdapter) {
-        firestoreOperations.getTodosRealtime({ list ->
-            priorityAdapter.submitList(list)
-            binding.rvPriorityTodos.adapter = priorityAdapter
-        }, {
-            requireView().showSnack(it)
-        })
+        firestoreOperations.getTodosRealtime(
+            onSuccess = { list ->
+                priorityAdapter.submitList(list)
+                binding.rvPriorityTodos.adapter = priorityAdapter
+            },
+            onFailure = {
+                requireView().showSnack(it)
+            }
+        )
     }
 
     private fun getTodoByPriority(priority: String, priorityAdapter: PriorityAdapter) {
-        firestoreOperations.getTodoByPriorityOnce(priority, {
-            priorityAdapter.submitList(it)
-            binding.rvPriorityTodos.adapter = priorityAdapter
-        }, {
-            requireView().showSnack(it)
-        })
+        firestoreOperations.getTodoByPriorityOnce(priority,
+            onSuccess = {
+                priorityAdapter.submitList(it)
+                binding.rvPriorityTodos.adapter = priorityAdapter
+            },
+            onFailure = {
+                requireView().showSnack(it)
+            }
+        )
     }
 }

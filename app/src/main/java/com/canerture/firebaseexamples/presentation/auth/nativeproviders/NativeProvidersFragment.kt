@@ -27,42 +27,48 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
 
             btnSignUp.setOnClickListener {
 
-                checkEmailAndPassword({ email, password ->
-                    authOperations.signUpWithEmailAndPassword(email, password, {
-                        findNavController().navigate(R.id.authToTodos)
-                    }, {
-                        requireView().showSnack(it)
-                    })
-                }, {
-                    requireView().showSnack("Email or password cannot be empty!")
-                })
+                checkEmailAndPassword { email, password ->
+                    authOperations.signUpWithEmailAndPassword(email, password,
+                        onSuccess = {
+                            findNavController().navigate(R.id.authToTodos)
+                        },
+                        onFailure = {
+                            requireView().showSnack(it)
+                        })
+                }
             }
 
             btnSignIn.setOnClickListener {
 
-                checkEmailAndPassword({ email, password ->
-                    authOperations.signInWithEmailAndPassword(email, password, {
-                        findNavController().navigate(R.id.authToTodos)
-                    }, {
-                        requireView().showSnack(it)
-                    })
-                }, {
-                    requireView().showSnack("Email or password cannot be empty!")
-                })
+                checkEmailAndPassword { email, password ->
+                    authOperations.signInWithEmailAndPassword(email, password,
+                        onSuccess = {
+                            findNavController().navigate(R.id.authToTodos)
+                        },
+                        onFailure = {
+                            requireView().showSnack(it)
+                        })
+                }
             }
 
             btnPhone.setOnClickListener {
                 val phoneNumber = etPhoneNumber.text.toString()
 
                 if (phoneNumber.isNotEmpty()) {
-                    authOperations.sendVerificationCode(phoneNumber, {
-                        requireView().showSnack("Code sent!")
-                    }, {
-                        findNavController().navigate(R.id.authToTodos)
-                        requireView().showSnack("Successful!")
-                    }, {
-                        requireView().showSnack(it)
-                    })
+                    authOperations.sendVerificationCode(phoneNumber,
+                        onCodeSent = {
+                            requireView().showSnack("Code sent!")
+                        },
+
+                        onSuccess = {
+                            findNavController().navigate(R.id.authToTodos)
+                            requireView().showSnack("Successful!")
+                        },
+
+                        onFailure = {
+                            requireView().showSnack(it)
+                        }
+                    )
                 }
             }
 
@@ -70,36 +76,42 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
                 val verifyCode = etVerifyCode.text.toString()
 
                 if (verifyCode.isNotEmpty()) {
-                    authOperations.verifyCode(verifyCode, {
-                        findNavController().navigate(R.id.authToTodos)
-                    }, {
-                        requireView().showSnack(it)
-                    })
+                    authOperations.verifyCode(verifyCode,
+                        onSuccess = {
+                            findNavController().navigate(R.id.authToTodos)
+                        },
+
+                        onFailure = {
+                            requireView().showSnack(it)
+                        }
+                    )
                 }
             }
 
             btnAnonymous.setOnClickListener {
-                authOperations.signInAnonymously({
-                    findNavController().navigate(R.id.authToTodos)
-                }, {
-                    requireView().showSnack(it)
-                })
+                authOperations.signInAnonymously(
+                    onSuccess = {
+                        findNavController().navigate(R.id.authToTodos)
+                    },
+
+                    onFailure = {
+                        requireView().showSnack(it)
+                    }
+                )
             }
         }
     }
 
     private fun checkEmailAndPassword(
-        onSuccess: (String, String) -> Unit = { _, _ -> },
-        onFailure: () -> Unit = {}
+        onSuccess: (String, String) -> Unit
     ) {
-
         val email = binding.etEmail.text.toString()
         val password = binding.etPassword.text.toString()
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             onSuccess(email, password)
         } else {
-            onFailure()
+            requireView().showSnack("Email or password cannot be empty!")
         }
     }
 }

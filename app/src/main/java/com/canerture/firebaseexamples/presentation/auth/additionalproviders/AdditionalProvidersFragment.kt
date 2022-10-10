@@ -1,5 +1,6 @@
 package com.canerture.firebaseexamples.presentation.auth.additionalproviders
 
+import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,38 +35,44 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
 
             btnGoogle.setOnClickListener {
 
-                authOperationsWrapper.signInWithGoogle(requireActivity(), oneTapClient, {
-                    googleSignInIntentResultLauncher.launch(it)
-                }, {
-                    requireView().showSnack(it)
-                })
+                authOperationsWrapper.signInWithGoogle(requireActivity(), oneTapClient,
+                    onSuccess = {
+                        googleSignInIntentResultLauncher.launch(it)
+                    },
+                    onFailure = {
+                        requireView().showSnack(it)
+                    })
             }
 
             btnGithub.setOnClickListener {
 
-                authOperationsWrapper.signInWithGithub(requireActivity(), {
-                    findNavController().navigate(R.id.authToTodos)
-                    requireView().showSnack("Successful!")
-                }, {
-                    requireView().showSnack(it)
-                })
+                authOperationsWrapper.signInWithGithub(requireActivity(),
+                    onSuccess = {
+                        findNavController().navigate(R.id.authToTodos)
+                        requireView().showSnack("Successful!")
+                    },
+                    onFailure = {
+                        requireView().showSnack(it)
+                    })
             }
 
             btnTwitter.setOnClickListener {
 
-                authOperationsWrapper.signInWithTwitter(requireActivity(), {
-                    findNavController().navigate(R.id.authToTodos)
-                    requireView().showSnack("Successful!")
-                }, {
-                    requireView().showSnack(it)
-                })
+                authOperationsWrapper.signInWithTwitter(requireActivity(),
+                    onSuccess = {
+                        findNavController().navigate(R.id.authToTodos)
+                        requireView().showSnack("Successful!")
+                    },
+                    onFailure = {
+                        requireView().showSnack(it)
+                    })
             }
         }
     }
 
     private val googleSignInIntentResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            if (result != null) {
+            if (result != null && result.resultCode == RESULT_OK) {
                 val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
                 val idToken = credential.googleIdToken
                 idToken?.let {
