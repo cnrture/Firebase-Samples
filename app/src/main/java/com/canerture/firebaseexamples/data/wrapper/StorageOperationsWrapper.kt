@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.common
+package com.canerture.firebaseexamples.data.wrapper
 
 import android.graphics.Bitmap
 import com.google.firebase.storage.FirebaseStorage

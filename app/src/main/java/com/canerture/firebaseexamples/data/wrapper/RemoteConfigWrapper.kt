@@ -1,5 +1,6 @@
-package com.canerture.firebaseexamples.common
+package com.canerture.firebaseexamples.data.wrapper
 
+import com.canerture.firebaseexamples.common.showLogDebug
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlin.time.Duration.Companion.hours

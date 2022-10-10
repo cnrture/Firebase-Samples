@@ -1,4 +1,4 @@
-package com.canerture.firebaseexamples.common
+package com.canerture.firebaseexamples.data.wrapper
 
 import android.app.Activity
 import android.content.IntentSender

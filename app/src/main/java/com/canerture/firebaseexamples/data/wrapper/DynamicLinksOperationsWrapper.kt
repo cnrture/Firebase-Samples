@@ -1,6 +1,7 @@
-package com.canerture.firebaseexamples.common
+package com.canerture.firebaseexamples.data.wrapper
 
 import android.content.Intent
+import com.canerture.firebaseexamples.common.showLogDebug
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
 

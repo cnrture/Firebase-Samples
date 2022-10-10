@@ -1,21 +1,27 @@
 package com.canerture.firebaseexamples.presentation.todos
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
-import com.canerture.firebaseexamples.common.*
+import com.canerture.firebaseexamples.common.showLogDebug
+import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.data.model.Todo
+import com.canerture.firebaseexamples.data.wrapper.AdsOperationsWrapper
+import com.canerture.firebaseexamples.data.wrapper.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.databinding.FragmentTodosBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TodosFragment : Fragment(R.layout.fragment_todos) {
+class TodosFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentTodosBinding::bind)
+    private var _binding: FragmentTodosBinding? = null
+    private val binding get() = _binding!!
 
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
@@ -23,79 +29,87 @@ class TodosFragment : Fragment(R.layout.fragment_todos) {
     @Inject
     lateinit var adsOperationsWrapper: AdsOperationsWrapper
 
+    private val todosAdapter by lazy { TodosAdapter() }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentTodosBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
 
-            TodosAdapter(
-                onDoneClick = { documentId ->
-                    firestoreOperations.setDone(documentId,
-                        onSuccess = {
-                            requireView().showSnack("Done State Updated!")
-                        },
-                        onFailure = {
-                            requireView().showSnack(it)
-                        }
-                    )
-                },
+            firestoreOperations.getNotDoneTodosRealtime({ list ->
 
-                onEditClick = { documentId ->
-                    val action = TodosFragmentDirections.todosToDetail(documentId)
-                    findNavController().navigate(action)
-                },
-
-                onDeleteClick = { documentId ->
-                    firestoreOperations.deleteTodo(documentId,
-                        onSuccess = {
-                            requireView().showSnack("Data deleted!")
-                        },
-                        onFailure = {
-                            requireView().showSnack(it)
-                        }
-                    )
-                }
-            ).apply {
-
-                firestoreOperations.getNotDoneTodosRealtime({ list ->
-
-                    adsOperationsWrapper.loadNativeAds(requireContext(),
-                        onLoadedAd = {
-                            setNativeAds(it)
-                            submitList(addNullToArray(list))
-                            binding.rvTodos.adapter = this
-                        },
-                        onAdFailedToLoad = {
-                            submitList(list)
-                            showLogDebug("NativeAds", it)
-                        })
-
-                    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-                        override fun onQueryTextSubmit(query: String?): Boolean {
-                            return false
-                        }
-
-                        override fun onQueryTextChange(query: String?): Boolean {
-                            if (query.isNullOrEmpty()) {
-                                submitList(list)
-                            } else {
-                                firestoreOperations.queryTodo(query,
-                                    onSuccess = { list ->
-                                        this@apply.submitList(list)
-                                        binding.rvTodos.adapter = this@apply
-                                    },
-                                    onFailure = { errorMessage ->
-                                        requireView().showSnack(errorMessage)
-                                    }
-                                )
-                            }
-                            return false
-                        }
+                adsOperationsWrapper.loadNativeAds(requireContext(),
+                    onLoadedAd = {
+                        todosAdapter.setNativeAds(it)
+                        todosAdapter.submitList(addNullToArray(list))
+                    },
+                    onAdFailedToLoad = {
+                        todosAdapter.submitList(list)
+                        showLogDebug("NativeAds", it)
                     })
-                }, {
-                    requireView().showSnack(it)
+
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(query: String?): Boolean {
+                        if (query.isNullOrEmpty()) {
+                            todosAdapter.submitList(list)
+                        } else {
+                            firestoreOperations.queryTodo(query,
+                                onSuccess = { list ->
+                                    todosAdapter.submitList(list)
+                                },
+                                onFailure = { errorMessage ->
+                                    requireView().showSnack(errorMessage)
+                                }
+                            )
+                        }
+                        return false
+                    }
                 })
+
+                binding.rvTodos.adapter = todosAdapter
+            }, {
+                requireView().showSnack(it)
+            })
+
+            todosAdapter.onDoneClick = { documentId ->
+                firestoreOperations.setDone(documentId,
+                    onSuccess = {
+                        requireView().showSnack("Done State Updated!")
+                    },
+                    onFailure = {
+                        requireView().showSnack(it)
+                    }
+                )
+            }
+
+            todosAdapter.onEditClick = { documentId ->
+                val action = TodosFragmentDirections.todosToDetail(documentId)
+                findNavController().navigate(action)
+            }
+
+            todosAdapter.onDeleteClick = { documentId ->
+                firestoreOperations.deleteTodo(documentId,
+                    onSuccess = {
+                        requireView().showSnack("Data deleted!")
+                    },
+                    onFailure = {
+                        requireView().showSnack(it)
+                    }
+                )
             }
 
             fabAddTodo.setOnClickListener {
@@ -114,5 +128,10 @@ class TodosFragment : Fragment(R.layout.fragment_todos) {
             newData.add(data[i])
         }
         return newData
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

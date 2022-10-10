@@ -1,11 +1,15 @@
 package com.canerture.firebaseexamples.presentation.done
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.canerture.firebaseexamples.R
-import com.canerture.firebaseexamples.common.*
+import com.canerture.firebaseexamples.common.showLogDebug
+import com.canerture.firebaseexamples.common.showSnack
+import com.canerture.firebaseexamples.data.wrapper.AdsOperationsWrapper
+import com.canerture.firebaseexamples.data.wrapper.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.databinding.FragmentDoneBinding
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -13,9 +17,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DoneFragment : Fragment(R.layout.fragment_done) {
+class DoneFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentDoneBinding::bind)
+    private var _binding: FragmentDoneBinding? = null
+    private val binding get() = _binding!!
 
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
@@ -23,8 +28,59 @@ class DoneFragment : Fragment(R.layout.fragment_done) {
     @Inject
     lateinit var adsOperationsWrapper: AdsOperationsWrapper
 
+    private val doneAdapter by lazy { DoneAdapter() }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentDoneBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        with(binding) {
+
+            firestoreOperations.getDoneTodosRealtime(
+                onSuccess = { list ->
+                    doneAdapter.submitList(list)
+                    rvTodos.adapter = doneAdapter
+                },
+
+                onFailure = {
+                    requireView().showSnack(it)
+                }
+            )
+
+            doneAdapter.onEditClick = {
+                val action = DoneFragmentDirections.doneToDetail(it)
+                findNavController().navigate(action)
+            }
+
+            doneAdapter.onDeleteClick = { documentId ->
+                firestoreOperations.deleteTodo(documentId,
+                    onSuccess = {
+                        requireView().showSnack("Data deleted!")
+                    }, onFailure = {
+                        requireView().showSnack(it)
+                    }
+                )
+            }
+
+            doneAdapter.onNotDoneClick = { documentId ->
+                firestoreOperations.setNotDone(documentId,
+                    onSuccess = {
+                        requireView().showSnack("Done State Updated!")
+                    },
+                    onFailure = {
+                        requireView().showSnack(it)
+                    }
+                )
+            }
+        }
 
         adsOperationsWrapper.loadRewardedAds(requireContext(),
             onAdLoaded = { rewardedAd ->
@@ -62,47 +118,10 @@ class DoneFragment : Fragment(R.layout.fragment_done) {
                 showLogDebug("RewardedAds", it)
             }
         )
+    }
 
-        with(binding) {
-
-            firestoreOperations.getDoneTodosRealtime(
-                onSuccess = { list ->
-                    DoneAdapter(
-                        onEditClick = {
-                            val action = DoneFragmentDirections.doneToDetail(it)
-                            findNavController().navigate(action)
-                        },
-
-                        onDeleteClick = { documentId ->
-                            firestoreOperations.deleteTodo(documentId,
-                                onSuccess = {
-                                    requireView().showSnack("Data deleted!")
-                                }, onFailure = {
-                                    requireView().showSnack(it)
-                                }
-                            )
-                        },
-
-                        onNotDoneClick = { documentId ->
-                            firestoreOperations.setNotDone(documentId,
-                                onSuccess = {
-                                    requireView().showSnack("Done State Updated!")
-                                },
-                                onFailure = {
-                                    requireView().showSnack(it)
-                                }
-                            )
-                        }
-                    ).apply {
-                        submitList(list)
-                        rvTodos.adapter = this
-                    }
-                },
-
-                onFailure = {
-                    requireView().showSnack(it)
-                }
-            )
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

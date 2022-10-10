@@ -1,24 +1,35 @@
 package com.canerture.firebaseexamples.presentation.auth.nativeproviders
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
-import com.canerture.firebaseexamples.common.AuthOperationsWrapper
 import com.canerture.firebaseexamples.common.showSnack
-import com.canerture.firebaseexamples.common.viewBinding
+import com.canerture.firebaseexamples.data.wrapper.AuthOperationsWrapper
 import com.canerture.firebaseexamples.databinding.FragmentNativeProvidersBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
+class NativeProvidersFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentNativeProvidersBinding::bind)
+    private var _binding: FragmentNativeProvidersBinding? = null
+    private val binding get() = _binding!!
 
     @Inject
     lateinit var authOperations: AuthOperationsWrapper
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentNativeProvidersBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,5 +124,10 @@ class NativeProvidersFragment : Fragment(R.layout.fragment_native_providers) {
         } else {
             requireView().showSnack("Email or password cannot be empty!")
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

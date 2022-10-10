@@ -12,11 +12,11 @@ import com.canerture.firebaseexamples.common.visible
 import com.canerture.firebaseexamples.data.model.Todo
 import com.canerture.firebaseexamples.databinding.ItemTodoBinding
 
-class DoneAdapter(
-    val onEditClick: (String) -> Unit,
-    val onNotDoneClick: (String) -> Unit,
-    val onDeleteClick: (String) -> Unit
-) : ListAdapter<Todo, DoneAdapter.DoneViewHolder>(DiffCallback()) {
+class DoneAdapter : ListAdapter<Todo, DoneAdapter.DoneViewHolder>(DiffCallback()) {
+
+    var onEditClick: (String) -> Unit = {}
+    var onNotDoneClick: (String) -> Unit = {}
+    var onDeleteClick: (String) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DoneViewHolder {
         val binding = ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false)

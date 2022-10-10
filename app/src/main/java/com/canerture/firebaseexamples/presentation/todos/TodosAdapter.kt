@@ -18,11 +18,11 @@ import com.canerture.firebaseexamples.databinding.ItemTodoBinding
 import com.canerture.firebaseexamples.databinding.NativeAdLayoutBinding
 import com.google.android.gms.ads.nativead.NativeAd
 
-class TodosAdapter(
-    val onEditClick: (String) -> Unit,
-    val onDoneClick: (String) -> Unit,
-    val onDeleteClick: (String) -> Unit
-) : ListAdapter<Todo, RecyclerView.ViewHolder>(DiffCallback()) {
+class TodosAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(DiffCallback()) {
+
+    var onEditClick: (String) -> Unit = {}
+    var onDoneClick: (String) -> Unit = {}
+    var onDeleteClick: (String) -> Unit = {}
 
     private var nativeAd: NativeAd? = null
 

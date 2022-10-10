@@ -2,14 +2,15 @@ package com.canerture.firebaseexamples.presentation.auth.additionalproviders
 
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.canerture.firebaseexamples.R
-import com.canerture.firebaseexamples.common.AuthOperationsWrapper
 import com.canerture.firebaseexamples.common.showSnack
-import com.canerture.firebaseexamples.common.viewBinding
+import com.canerture.firebaseexamples.data.wrapper.AuthOperationsWrapper
 import com.canerture.firebaseexamples.databinding.FragmentAdditionalProvidersBinding
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -17,14 +18,24 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_providers) {
+class AdditionalProvidersFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentAdditionalProvidersBinding::bind)
+    private var _binding: FragmentAdditionalProvidersBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var oneTapClient: SignInClient
 
     @Inject
     lateinit var authOperationsWrapper: AuthOperationsWrapper
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAdditionalProvidersBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,4 +91,9 @@ class AdditionalProvidersFragment : Fragment(R.layout.fragment_additional_provid
                 }
             }
         }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

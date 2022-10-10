@@ -5,7 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.canerture.firebaseexamples.R
-import com.canerture.firebaseexamples.common.*
+import com.canerture.firebaseexamples.common.gone
+import com.canerture.firebaseexamples.common.showLogDebug
+import com.canerture.firebaseexamples.common.viewBinding
+import com.canerture.firebaseexamples.common.visible
+import com.canerture.firebaseexamples.data.wrapper.AdsOperationsWrapper
+import com.canerture.firebaseexamples.data.wrapper.RemoteConfigWrapper
 import com.canerture.firebaseexamples.databinding.ActivityMainBinding
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging

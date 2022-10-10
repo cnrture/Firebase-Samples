@@ -1,11 +1,16 @@
 package com.canerture.firebaseexamples.presentation.priority
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.canerture.firebaseexamples.R
-import com.canerture.firebaseexamples.common.*
+import com.canerture.firebaseexamples.common.radioButtonCheckedListener
+import com.canerture.firebaseexamples.common.showLogDebug
+import com.canerture.firebaseexamples.common.showSnack
+import com.canerture.firebaseexamples.data.wrapper.AdsOperationsWrapper
+import com.canerture.firebaseexamples.data.wrapper.FirestoreOperationsWrapper
 import com.canerture.firebaseexamples.databinding.FragmentPriorityBinding
 import com.canerture.firebaseexamples.presentation.done.DoneFragmentDirections
 import com.google.android.gms.ads.AdListener
@@ -14,9 +19,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PriorityFragment : Fragment(R.layout.fragment_priority) {
+class PriorityFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentPriorityBinding::bind)
+    private var _binding: FragmentPriorityBinding? = null
+    private val binding get() = _binding!!
 
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
@@ -24,44 +30,54 @@ class PriorityFragment : Fragment(R.layout.fragment_priority) {
     @Inject
     lateinit var adsOperationsWrapper: AdsOperationsWrapper
 
+    private val priorityAdapter by lazy { PriorityAdapter() }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentPriorityBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
 
-            PriorityAdapter(
-                onEditClick = {
-                    val action = DoneFragmentDirections.doneToDetail(it)
-                    findNavController().navigate(action)
-                },
+            listenData(priorityAdapter)
 
-                onDeleteClick = { documentId ->
-                    firestoreOperations.deleteTodo(documentId,
-                        onSuccess = {
-                            requireView().showSnack("Data deleted!")
-                        }, onFailure = {
-                            requireView().showSnack(it)
-                        }
-                    )
-                },
+            radioButtonCheckedListener(rbLowPriority, rbMediumPriority, rbHighPriority) {
+                getTodoByPriority(it, priorityAdapter)
+            }
 
-                onDoneClick = { documentId ->
-                    firestoreOperations.setDone(documentId,
-                        onSuccess = {
-                            requireView().showSnack("Done State Updated!")
-                        },
-                        onFailure = {
-                            requireView().showSnack(it)
-                        }
-                    )
-                }
-            ).apply {
+            binding.rvPriorityTodos.adapter = priorityAdapter
 
-                listenData(this)
+            priorityAdapter.onEditClick = {
+                val action = DoneFragmentDirections.doneToDetail(it)
+                findNavController().navigate(action)
+            }
 
-                radioButtonCheckedListener(rbLowPriority, rbMediumPriority, rbHighPriority) {
-                    getTodoByPriority(it, this)
-                }
+            priorityAdapter.onDeleteClick = { documentId ->
+                firestoreOperations.deleteTodo(documentId,
+                    onSuccess = {
+                        requireView().showSnack("Data deleted!")
+                    }, onFailure = {
+                        requireView().showSnack(it)
+                    }
+                )
+            }
+
+            priorityAdapter.onDoneOrNotDoneClick = { isChecked, documentId ->
+                firestoreOperations.setDoneState(isChecked, documentId,
+                    onSuccess = {
+                        requireView().showSnack("Done State Updated!")
+                    },
+                    onFailure = {
+                        requireView().showSnack(it)
+                    }
+                )
             }
 
             val request = adsOperationsWrapper.showBannerAds(requireContext())
@@ -99,7 +115,6 @@ class PriorityFragment : Fragment(R.layout.fragment_priority) {
         firestoreOperations.getTodosRealtime(
             onSuccess = { list ->
                 priorityAdapter.submitList(list)
-                binding.rvPriorityTodos.adapter = priorityAdapter
             },
             onFailure = {
                 requireView().showSnack(it)
@@ -111,11 +126,15 @@ class PriorityFragment : Fragment(R.layout.fragment_priority) {
         firestoreOperations.getTodoByPriorityOnce(priority,
             onSuccess = {
                 priorityAdapter.submitList(it)
-                binding.rvPriorityTodos.adapter = priorityAdapter
             },
             onFailure = {
                 requireView().showSnack(it)
             }
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

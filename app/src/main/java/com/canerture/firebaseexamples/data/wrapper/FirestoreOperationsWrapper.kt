@@ -1,8 +1,9 @@
-package com.canerture.firebaseexamples.common
+package com.canerture.firebaseexamples.data.wrapper
 
 import com.canerture.firebaseexamples.common.Constants.PRIORITY_HIGH
 import com.canerture.firebaseexamples.common.Constants.PRIORITY_LOW
 import com.canerture.firebaseexamples.common.Constants.PRIORITY_MEDIUM
+import com.canerture.firebaseexamples.common.getDateTimeAsFormattedString
 import com.canerture.firebaseexamples.data.model.Todo
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -71,6 +72,17 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
                 "priority" to priority
             )
         )
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it.message.orEmpty()) }
+    }
+
+    fun setDoneState(
+        state: Boolean,
+        documentId: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        collection.document(documentId).update("isDone", state)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it.message.orEmpty()) }
     }

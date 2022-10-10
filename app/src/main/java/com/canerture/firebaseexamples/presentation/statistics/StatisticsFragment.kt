@@ -2,10 +2,15 @@ package com.canerture.firebaseexamples.presentation.statistics
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.canerture.firebaseexamples.R
-import com.canerture.firebaseexamples.common.*
+import com.canerture.firebaseexamples.common.showLogDebug
+import com.canerture.firebaseexamples.common.showSnack
+import com.canerture.firebaseexamples.data.wrapper.AdsOperationsWrapper
+import com.canerture.firebaseexamples.data.wrapper.FirestoreOperationsWrapper
+import com.canerture.firebaseexamples.data.wrapper.RemoteConfigWrapper
 import com.canerture.firebaseexamples.databinding.FragmentStatisticsBinding
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -17,9 +22,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
+class StatisticsFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentStatisticsBinding::bind)
+    private var _binding: FragmentStatisticsBinding? = null
+    private val binding get() = _binding!!
 
     @Inject
     lateinit var firestoreOperations: FirestoreOperationsWrapper
@@ -29,6 +35,15 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
     @Inject
     lateinit var remoteConfigWrapper: RemoteConfigWrapper
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentStatisticsBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -102,5 +117,10 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                     requireView().showSnack(it)
                 })
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.canerture.firebaseexamples.common.*
+import com.canerture.firebaseexamples.data.wrapper.FirestoreOperationsWrapper
+import com.canerture.firebaseexamples.data.wrapper.StorageOperationsWrapper
 import com.canerture.firebaseexamples.databinding.BottomSheetAddTodoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint

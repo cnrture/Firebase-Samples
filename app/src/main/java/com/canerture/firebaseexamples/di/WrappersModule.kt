@@ -1,6 +1,6 @@
 package com.canerture.firebaseexamples.di
 
-import com.canerture.firebaseexamples.common.*
+import com.canerture.firebaseexamples.data.wrapper.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
