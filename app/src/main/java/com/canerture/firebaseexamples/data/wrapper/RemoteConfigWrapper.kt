@@ -18,7 +18,7 @@ class RemoteConfigWrapper(private val firebaseRemoteConfig: FirebaseRemoteConfig
 
         firebaseRemoteConfig.setDefaultsAsync(
             mapOf(
-                "nativeAdsShowState" to true
+                "interstitialAdShowState" to true
             )
         )
     }
