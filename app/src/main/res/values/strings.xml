@@ -13,4 +13,23 @@
     <string name="high">High</string>
     <string name="medium">Medium</string>
     <string name="low">Low</string>
+    <string name="verify_code">Verify Code</string>
+    <string name="phone">Phone</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="e_mail">E-Mail</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="phone_ex_905420001100">ex: +905420001100</string>
+    <string name="send_code">Send Code</string>
+    <string name="sign_in_anonymously">Sign In Anonymously</string>
+    <string name="e_mail_password">E-Mail / Password</string>
+    <string name="add_todo">Add Todo</string>
+    <string name="todo">Todo</string>
+    <string name="set_todo">Set Todo</string>
+    <string name="update">Update</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
+    <string name="sign_in_with_github">Sign in with Github</string>
+    <string name="date">Date</string>
 </resources>

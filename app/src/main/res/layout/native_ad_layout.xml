@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:elevation="5dp"
         app:contentPadding="16dp"
-        app:cardBackgroundColor="#424242"
+        app:cardBackgroundColor="@color/blue"
         app:cardCornerRadius="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
