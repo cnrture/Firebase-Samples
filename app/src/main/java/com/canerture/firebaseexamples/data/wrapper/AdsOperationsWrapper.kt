@@ -9,16 +9,15 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
-class AdsOperationsWrapper {
+class AdsOperationsWrapper(private val context: Context) {
 
-    fun initMobileAds(context: Context) {
+    fun initMobileAds() {
         MobileAds.initialize(context)
     }
 
     fun showBannerAds(): AdRequest = AdRequest.Builder().build()
 
     fun loadInterstitialAd(
-        context: Context,
         onAdLoaded: (InterstitialAd) -> Unit,
         onAdFailedToLoad: (String) -> Unit
     ) {
@@ -43,7 +42,6 @@ class AdsOperationsWrapper {
     }
 
     fun loadRewardedAds(
-        context: Context,
         onAdLoaded: (RewardedAd) -> Unit,
         onAdFailedToLoad: (String) -> Unit
     ) {
@@ -65,7 +63,6 @@ class AdsOperationsWrapper {
     }
 
     fun loadNativeAds(
-        context: Context,
         onLoadedAd: (NativeAd) -> Unit,
         onAdFailedToLoad: (String) -> Unit
     ) {

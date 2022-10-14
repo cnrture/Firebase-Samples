@@ -50,7 +50,7 @@ class StatisticsFragment : Fragment() {
 
         remoteConfigWrapper.fetchInterstitialAdShowState {
             if (it) {
-                adsOperationsWrapper.loadInterstitialAd(requireContext(),
+                adsOperationsWrapper.loadInterstitialAd(
                     onAdLoaded = { interstitialAd ->
                         interstitialAd.fullScreenContentCallback =
                             object : FullScreenContentCallback() {
