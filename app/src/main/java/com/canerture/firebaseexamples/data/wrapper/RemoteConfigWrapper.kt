@@ -25,7 +25,7 @@ class RemoteConfigWrapper(private val firebaseRemoteConfig: FirebaseRemoteConfig
 
     fun fetchInterstitialAdShowState(nativeAdsShowState: (Boolean) -> Unit) {
         firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener {
-            nativeAdsShowState(firebaseRemoteConfig.getBoolean("nativeAdsShowState"))
+            nativeAdsShowState(firebaseRemoteConfig.getBoolean("interstitialAdShowState"))
         }.addOnFailureListener {
             showLogDebug(TAG, it.message.orEmpty())
         }

@@ -46,13 +46,13 @@ class PriorityFragment : Fragment() {
 
         with(binding) {
 
+            rvPriorityTodos.adapter = priorityAdapter
+
             listenData(priorityAdapter)
 
             radioButtonCheckedListener(rbLowPriority, rbMediumPriority, rbHighPriority) {
                 getTodoByPriority(it, priorityAdapter)
             }
-
-            binding.rvPriorityTodos.adapter = priorityAdapter
 
             priorityAdapter.onEditClick = {
                 val action = DoneFragmentDirections.doneToDetail(it)
@@ -62,9 +62,9 @@ class PriorityFragment : Fragment() {
             priorityAdapter.onDeleteClick = { documentId ->
                 firestoreOperations.deleteTodo(documentId,
                     onSuccess = {
-                        requireView().showSnack("Data deleted!")
+                        view.showSnack("Data deleted!")
                     }, onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     }
                 )
             }
@@ -72,15 +72,15 @@ class PriorityFragment : Fragment() {
             priorityAdapter.onDoneOrNotDoneClick = { isChecked, documentId ->
                 firestoreOperations.setDoneState(isChecked, documentId,
                     onSuccess = {
-                        requireView().showSnack("Done State Updated!")
+                        view.showSnack("Done State Updated!")
                     },
                     onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     }
                 )
             }
 
-            val request = adsOperationsWrapper.showBannerAds(requireContext())
+            val request = adsOperationsWrapper.showBannerAds()
             adView.loadAd(request)
             adView.adListener = object : AdListener() {
 

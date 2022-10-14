@@ -45,6 +45,8 @@ class TodosFragment : Fragment() {
 
         with(binding) {
 
+            rvTodos.adapter = todosAdapter
+
             firestoreOperations.getNotDoneTodosRealtime({ list ->
 
                 adsOperationsWrapper.loadNativeAds(requireContext(),
@@ -72,26 +74,24 @@ class TodosFragment : Fragment() {
                                     todosAdapter.submitList(list)
                                 },
                                 onFailure = { errorMessage ->
-                                    requireView().showSnack(errorMessage)
+                                    view.showSnack(errorMessage)
                                 }
                             )
                         }
                         return false
                     }
                 })
-
-                binding.rvTodos.adapter = todosAdapter
             }, {
-                requireView().showSnack(it)
+                view.showSnack(it)
             })
 
             todosAdapter.onDoneClick = { documentId ->
                 firestoreOperations.setDone(documentId,
                     onSuccess = {
-                        requireView().showSnack("Done State Updated!")
+                        view.showSnack("Done State Updated!")
                     },
                     onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     }
                 )
             }
@@ -104,10 +104,10 @@ class TodosFragment : Fragment() {
             todosAdapter.onDeleteClick = { documentId ->
                 firestoreOperations.deleteTodo(documentId,
                     onSuccess = {
-                        requireView().showSnack("Data deleted!")
+                        view.showSnack("Data deleted!")
                     },
                     onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     }
                 )
             }

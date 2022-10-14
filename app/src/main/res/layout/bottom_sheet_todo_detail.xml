@@ -109,4 +109,14 @@
         app:srcCompat="@drawable/ic_delete"
         app:tint="@color/red" />
 
+    <ImageView
+        android:id="@+id/img_download_image"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/img_todo_image"
+        app:layout_constraintStart_toEndOf="@+id/img_todo_image"
+        app:srcCompat="@drawable/ic_download"
+        app:tint="@color/blue" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

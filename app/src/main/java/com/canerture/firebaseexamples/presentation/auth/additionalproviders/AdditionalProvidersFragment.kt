@@ -51,7 +51,7 @@ class AdditionalProvidersFragment : Fragment() {
                         googleSignInIntentResultLauncher.launch(it)
                     },
                     onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     })
             }
 
@@ -60,10 +60,10 @@ class AdditionalProvidersFragment : Fragment() {
                 authOperationsWrapper.signInWithGithub(requireActivity(),
                     onSuccess = {
                         findNavController().navigate(R.id.authToTodos)
-                        requireView().showSnack("Successful!")
+                        view.showSnack("Successful!")
                     },
                     onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     })
             }
 
@@ -72,10 +72,10 @@ class AdditionalProvidersFragment : Fragment() {
                 authOperationsWrapper.signInWithTwitter(requireActivity(),
                     onSuccess = {
                         findNavController().navigate(R.id.authToTodos)
-                        requireView().showSnack("Successful!")
+                        view.showSnack("Successful!")
                     },
                     onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     })
             }
         }

@@ -1,5 +1,6 @@
 package com.canerture.firebaseexamples.presentation.done
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -35,6 +36,7 @@ class DoneAdapter : ListAdapter<Todo, DoneAdapter.DoneViewHolder>(DiffCallback()
 
             with(binding) {
 
+                tvTodo.paintFlags = tvTodo.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 tvTodo.text = item.todo
                 tvDate.text = item.date
 

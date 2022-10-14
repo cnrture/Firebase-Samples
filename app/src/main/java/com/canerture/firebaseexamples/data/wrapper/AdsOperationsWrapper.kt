@@ -15,13 +15,7 @@ class AdsOperationsWrapper {
         MobileAds.initialize(context)
     }
 
-    fun showBannerAds(context: Context): AdRequest {
-        AdView(context).apply {
-            setAdSize(AdSize.BANNER)
-            adUnitId = "ca-app-pub-3940256099942544/6300978111"
-        }
-        return AdRequest.Builder().build()
-    }
+    fun showBannerAds(): AdRequest = AdRequest.Builder().build()
 
     fun loadInterstitialAd(
         context: Context,
@@ -32,7 +26,7 @@ class AdsOperationsWrapper {
 
         InterstitialAd.load(
             context,
-            "ca-app-pub-3940256099942544/1033173712",
+            INTERSTITIAL_ADS_ID,
             adRequest,
             object : InterstitialAdLoadCallback() {
 
@@ -57,7 +51,7 @@ class AdsOperationsWrapper {
         val adRequest = AdRequest.Builder().build()
         RewardedAd.load(
             context,
-            "ca-app-pub-3940256099942544/5224354917",
+            REWARDED_ADS_ID,
             adRequest,
             object : RewardedAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -75,7 +69,7 @@ class AdsOperationsWrapper {
         onLoadedAd: (NativeAd) -> Unit,
         onAdFailedToLoad: (String) -> Unit
     ) {
-        val adLoader = AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110")
+        val adLoader = AdLoader.Builder(context, NATIVE_ADS_ID)
             .forNativeAd { ad: NativeAd ->
                 onLoadedAd(ad)
             }
@@ -85,5 +79,11 @@ class AdsOperationsWrapper {
                 }
             }).build()
         adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+    companion object {
+        private const val NATIVE_ADS_ID = "ca-app-pub-3940256099942544/2247696110"
+        private const val REWARDED_ADS_ID = "ca-app-pub-3940256099942544/5224354917"
+        private const val INTERSTITIAL_ADS_ID = "ca-app-pub-3940256099942544/1033173712"
     }
 }

@@ -7,7 +7,6 @@ import androidx.navigation.ui.NavigationUI
 import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.gone
 import com.canerture.firebaseexamples.common.showLogDebug
-import com.canerture.firebaseexamples.common.viewBinding
 import com.canerture.firebaseexamples.common.visible
 import com.canerture.firebaseexamples.data.wrapper.AdsOperationsWrapper
 import com.canerture.firebaseexamples.data.wrapper.RemoteConfigWrapper
@@ -20,7 +19,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val binding by viewBinding(ActivityMainBinding::inflate)
+    private lateinit var binding: ActivityMainBinding
 
     @Inject
     lateinit var adsOperationsWrapper: AdsOperationsWrapper
@@ -30,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         remoteConfigWrapper.initRemoteConfig()

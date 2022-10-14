@@ -114,7 +114,7 @@ class StatisticsFragment : Fragment() {
                 },
 
                 onFailure = {
-                    requireView().showSnack(it)
+                    view.showSnack(it)
                 })
         }
     }

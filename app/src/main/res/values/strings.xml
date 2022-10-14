@@ -19,6 +19,7 @@
     <string name="e_mail">E-Mail</string>
     <string name="password">Password</string>
     <string name="sign_up">Sign Up</string>
+    <string name="sign_up_success">Registration Successful!</string>
     <string name="sign_in">Sign In</string>
     <string name="phone_ex_905420001100">ex: +905420001100</string>
     <string name="send_code">Send Code</string>

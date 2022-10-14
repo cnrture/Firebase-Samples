@@ -44,14 +44,15 @@ class DoneFragment : Fragment() {
 
         with(binding) {
 
+            rvTodos.adapter = doneAdapter
+
             firestoreOperations.getDoneTodosRealtime(
                 onSuccess = { list ->
                     doneAdapter.submitList(list)
-                    rvTodos.adapter = doneAdapter
                 },
 
                 onFailure = {
-                    requireView().showSnack(it)
+                    view.showSnack(it)
                 }
             )
 
@@ -63,9 +64,9 @@ class DoneFragment : Fragment() {
             doneAdapter.onDeleteClick = { documentId ->
                 firestoreOperations.deleteTodo(documentId,
                     onSuccess = {
-                        requireView().showSnack("Data deleted!")
+                        view.showSnack("Data deleted!")
                     }, onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     }
                 )
             }
@@ -73,7 +74,7 @@ class DoneFragment : Fragment() {
             doneAdapter.onNotDoneClick = { documentId ->
                 firestoreOperations.setNotDone(documentId,
                     onSuccess = {
-                        requireView().showSnack("Done State Updated!")
+                        view.showSnack("Done State Updated!")
                     },
                     onFailure = {
                         requireView().showSnack(it)
@@ -110,7 +111,7 @@ class DoneFragment : Fragment() {
                 }
 
                 rewardedAd.show(requireActivity()) {
-                    requireView().showSnack("Type: ${it.type} - Amount: ${it.amount}")
+                    view.showSnack("Type: ${it.type} - Amount: ${it.amount}")
                 }
             },
 

@@ -87,6 +87,20 @@ class TodoDetailBottomSheet : BottomSheetDialogFragment() {
                         }
                     }
 
+                    imgDownloadImage.setOnClickListener {
+
+                        if (todoModel.imageName != null) {
+
+                            storageOperationsWrapper.downloadImage(todoModel.imageName,
+                                onSuccess = {
+                                    dialog?.showSnack("Image downloaded successfully!")
+                                },
+                                onFailure = {
+                                    dialog?.showSnack(it)
+                                })
+                        }
+                    }
+
                     imgDeleteImage.setOnClickListener {
 
                         if (todoModel.imageName != null && todoModel.documentId != null) {

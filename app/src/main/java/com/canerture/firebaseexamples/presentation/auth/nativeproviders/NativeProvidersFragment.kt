@@ -41,10 +41,10 @@ class NativeProvidersFragment : Fragment() {
                 checkEmailAndPassword { email, password ->
                     authOperations.signUpWithEmailAndPassword(email, password,
                         onSuccess = {
-                            findNavController().navigate(R.id.authToTodos)
+                            view.showSnack(getString(R.string.sign_up_success))
                         },
                         onFailure = {
-                            requireView().showSnack(it)
+                            view.showSnack(it)
                         })
                 }
             }
@@ -66,18 +66,18 @@ class NativeProvidersFragment : Fragment() {
                 val phoneNumber = etPhoneNumber.text.toString()
 
                 if (phoneNumber.isNotEmpty()) {
-                    authOperations.sendVerificationCode(phoneNumber,
+                    authOperations.sendVerificationCode(phoneNumber, requireActivity(),
                         onCodeSent = {
-                            requireView().showSnack("Code sent!")
+                            view.showSnack("Code sent!")
                         },
 
                         onSuccess = {
                             findNavController().navigate(R.id.authToTodos)
-                            requireView().showSnack("Successful!")
+                            view.showSnack("Successful!")
                         },
 
                         onFailure = {
-                            requireView().showSnack(it)
+                            view.showSnack(it)
                         }
                     )
                 }
@@ -93,7 +93,7 @@ class NativeProvidersFragment : Fragment() {
                         },
 
                         onFailure = {
-                            requireView().showSnack(it)
+                            view.showSnack(it)
                         }
                     )
                 }
@@ -106,7 +106,7 @@ class NativeProvidersFragment : Fragment() {
                     },
 
                     onFailure = {
-                        requireView().showSnack(it)
+                        view.showSnack(it)
                     }
                 )
             }

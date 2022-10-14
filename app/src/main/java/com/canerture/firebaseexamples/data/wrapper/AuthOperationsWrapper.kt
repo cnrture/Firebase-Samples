@@ -49,6 +49,7 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
 
     fun sendVerificationCode(
         phoneNumber: String,
+        activity: Activity,
         onCodeSent: () -> Unit,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
@@ -56,6 +57,7 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(activity)
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
