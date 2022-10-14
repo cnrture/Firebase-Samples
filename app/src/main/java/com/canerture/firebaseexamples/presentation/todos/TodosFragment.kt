@@ -49,7 +49,7 @@ class TodosFragment : Fragment() {
 
             firestoreOperations.getNotDoneTodosRealtime({ list ->
 
-                adsOperationsWrapper.loadNativeAds(requireContext(),
+                adsOperationsWrapper.loadNativeAds(
                     onLoadedAd = {
                         todosAdapter.setNativeAds(it)
                         todosAdapter.submitList(addNullToArray(list))
