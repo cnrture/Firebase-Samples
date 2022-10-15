@@ -47,6 +47,19 @@ class AuthOperationsWrapper(private val firebaseAuth: FirebaseAuth) {
             }
     }
 
+    fun forgotPassword(
+        email: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        firebaseAuth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                onSuccess()
+            }.addOnFailureListener {
+                onFailure(it.message.orEmpty())
+            }
+    }
+
     fun sendVerificationCode(
         phoneNumber: String,
         activity: Activity,
