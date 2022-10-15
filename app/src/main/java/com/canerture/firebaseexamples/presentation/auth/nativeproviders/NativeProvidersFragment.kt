@@ -62,6 +62,19 @@ class NativeProvidersFragment : Fragment() {
                 }
             }
 
+            btnForgotPassword.setOnClickListener {
+
+                checkEmail { email ->
+                    authOperations.forgotPassword(email,
+                        onSuccess = {
+                            requireView().showSnack("Password reset mail sent, please check your mail!")
+                        },
+                        onFailure = {
+                            requireView().showSnack(it)
+                        })
+                }
+            }
+
             btnPhone.setOnClickListener {
                 val phoneNumber = etPhoneNumber.text.toString()
 
@@ -123,6 +136,18 @@ class NativeProvidersFragment : Fragment() {
             onSuccess(email, password)
         } else {
             requireView().showSnack("Email or password cannot be empty!")
+        }
+    }
+
+    private fun checkEmail(
+        onSuccess: (String) -> Unit
+    ) {
+        val email = binding.etEmail.text.toString()
+
+        if (email.isNotEmpty()) {
+            onSuccess(email)
+        } else {
+            requireView().showSnack("Email cannot be empty!")
         }
     }
 
