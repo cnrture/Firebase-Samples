@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.canerture.firebaseexamples.R
 import com.canerture.firebaseexamples.common.showLogDebug
 import com.canerture.firebaseexamples.common.showSnack
 import com.canerture.firebaseexamples.data.wrapper.AdsOperationsWrapper
@@ -87,30 +89,32 @@ class StatisticsFragment : Fragment() {
                 onSuccess = { done, notDone, lowPriority, mediumPriority, highPriority ->
 
                     val entries = arrayListOf(
-                        PieEntry(done.toFloat()),
-                        PieEntry(notDone.toFloat()),
-                        PieEntry(lowPriority.toFloat()),
-                        PieEntry(mediumPriority.toFloat()),
-                        PieEntry(highPriority.toFloat())
+                        PieEntry(done.toFloat(), "Done"),
+                        PieEntry(notDone.toFloat(), "Not Done"),
+                        PieEntry(lowPriority.toFloat(), "Low"),
+                        PieEntry(mediumPriority.toFloat(), "Medium"),
+                        PieEntry(highPriority.toFloat(), "High")
                     )
 
-                    val colors =
-                        arrayListOf(Color.MAGENTA, Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW)
+                    val colors = arrayListOf(
+                        ContextCompat.getColor(requireContext(), R.color.stats_purple),
+                        ContextCompat.getColor(requireContext(), R.color.stats_blue),
+                        ContextCompat.getColor(requireContext(), R.color.stats_red),
+                        ContextCompat.getColor(requireContext(), R.color.stats_green),
+                        ContextCompat.getColor(requireContext(), R.color.stats_yellow)
+                    )
 
                     val dataSet = PieDataSet(entries, "Statistics")
-
                     dataSet.colors = colors
+                    dataSet.formSize = 15f
 
                     val pieData = PieData(dataSet).apply {
                         setValueFormatter(PercentFormatter())
-                        setValueTextSize(12f)
-                        setValueTextColor(Color.BLACK)
+                        setValueTextSize(15f)
+                        setValueTextColor(Color.WHITE)
                     }
-
                     pieChart.data = pieData
-
                     pieChart.invalidate()
-
                 },
 
                 onFailure = {

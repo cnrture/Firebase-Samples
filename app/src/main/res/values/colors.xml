@@ -22,4 +22,10 @@
     <color name="gray_soft">#DDDDDD</color>
 
     <color name="yellow">#FFB052</color>
+
+    <color name="stats_red">#E94949</color>
+    <color name="stats_blue">#6CC1D2</color>
+    <color name="stats_yellow">#EFA134</color>
+    <color name="stats_green">#0F6D40</color>
+    <color name="stats_purple">#5C34BF</color>
 </resources>
