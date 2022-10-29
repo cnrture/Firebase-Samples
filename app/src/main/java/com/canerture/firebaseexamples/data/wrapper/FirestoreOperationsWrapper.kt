@@ -257,7 +257,7 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
 
     private fun snapshotToList(
         querySnapshot: QuerySnapshot?,
-        list: (ArrayList<Todo>) -> Unit
+        list: (List<Todo>) -> Unit
     ) {
 
         val tempList = arrayListOf<Todo>()
@@ -277,7 +277,11 @@ class FirestoreOperationsWrapper(firestore: FirebaseFirestore) {
                 )
             }
 
-            list(tempList)
+            list(
+                tempList.sortedByDescending { todo ->
+                    todo.date
+                }
+            )
         }
     }
 }
