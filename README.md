@@ -45,6 +45,12 @@
 
 ### AdMob
 
-| Banner | Interstitial | Native | Rewarded |
-| ------ | ------------ | ------ | -------- |
-|<img src="https://user-images.githubusercontent.com/29903779/198761709-4a898b76-80d0-45d1-8f22-82b04af10d48.png"/>|<img src="https://user-images.githubusercontent.com/29903779/198760174-9ebaccec-445f-478c-a0bd-285b41b81d72.gif"/>|<img src="https://user-images.githubusercontent.com/29903779/198760669-6ea43519-362d-4c9e-9b2c-39fe798e3ad2.gif"/>|<img src="https://user-images.githubusercontent.com/29903779/198760160-ec4206f4-d679-419b-a9ca-fc1479fc03b9.gif"/>|
+| Banner | Interstitial |
+| ------ | ------------ |
+|<img src="https://user-images.githubusercontent.com/29903779/198761709-4a898b76-80d0-45d1-8f22-82b04af10d48.png" width="266" height="514"/>|<img src="https://user-images.githubusercontent.com/29903779/198760174-9ebaccec-445f-478c-a0bd-285b41b81d72.gif" width="266" height="514"/>|
+
+</br>
+
+| Native | Rewarded |
+| ------ | -------- |
+|<img src="https://user-images.githubusercontent.com/29903779/198760669-6ea43519-362d-4c9e-9b2c-39fe798e3ad2.gif" width="266" height="514"/>|<img src="https://user-images.githubusercontent.com/29903779/198760160-ec4206f4-d679-419b-a9ca-fc1479fc03b9.gif" width="266" height="514"/>|
