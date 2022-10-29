@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         remoteConfigWrapper.initRemoteConfig()
 
-        adsOperationsWrapper.initMobileAds(this)
+        adsOperationsWrapper.initMobileAds()
 
         Firebase.messaging.subscribeToTopic("todo").addOnSuccessListener {
             showLogDebug(TAG, "subscribeTopic: onSuccess")

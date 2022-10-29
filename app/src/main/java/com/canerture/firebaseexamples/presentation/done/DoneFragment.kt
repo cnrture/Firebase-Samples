@@ -83,7 +83,7 @@ class DoneFragment : Fragment() {
             }
         }
 
-        adsOperationsWrapper.loadRewardedAds(requireContext(),
+        adsOperationsWrapper.loadRewardedAds(
             onAdLoaded = { rewardedAd ->
                 rewardedAd.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdClicked() {
