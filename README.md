@@ -2,45 +2,29 @@
 
 ## Features
 
-+ ### Auth
-   + Additional Providers
-      - Google
-      - Github
-      - Twitter
-   + Native Providers
-      - Email / Password
-      - Phone
-      - Anonymous
++ ### Auth ([AuthOperationsWrapper.kt](https://github.com/cnrture/Firebase-Samples/blob/master/app/src/main/java/com/canerture/firebaseexamples/data/wrapper/AuthOperationsWrapper.kt))
+   + Additional Providers | Google - Github - Twitter
+   + Native Providers | E-Mail - Phone - Anonymous
 
-+ ### Firestore
-   - Add Data
-   - Set Data
-   - Update Data
-   - Delete Data
-   - Query Data
-   - Get Data Once
-   - Get Data Realtime Updates
++ ### Firestore ([FirestoreOperationsWrapper.kt](https://github.com/cnrture/Firebase-Samples/blob/master/app/src/main/java/com/canerture/firebaseexamples/data/wrapper/FirestoreOperationsWrapper.kt))
+   + Add - Set - Update - Delete - Query - Get Data Once - Get Data Realtime Updates
    
-+ ### AdMob
-   - Banner
-   - Interstitial
-   - Native
-   - Rewarded
++ ### AdMob ([AdsOperationsWrapper.kt](https://github.com/cnrture/Firebase-Samples/blob/master/app/src/main/java/com/canerture/firebaseexamples/data/wrapper/AdsOperationsWrapper.kt))
+   + Banner - Interstitial - Native - Rewarded
 
-+ ### Storage
-   - Upload File
-   - Download File
-   - Delete File
++ ### Storage ([StorageOperationsWrapper.kt](https://github.com/cnrture/Firebase-Samples/blob/master/app/src/main/java/com/canerture/firebaseexamples/data/wrapper/StorageOperationsWrapper.kt))
+   + Upload File - Download File - Delete File
+
++ ### Remote Config ([RemoteConfigWrapper.kt](https://github.com/cnrture/Firebase-Samples/blob/master/app/src/main/java/com/canerture/firebaseexamples/data/wrapper/RemoteConfigWrapper.kt))
+
++ ### Cloud Messaging (FCM) ([FirebaseMessagingService.kt](https://github.com/cnrture/Firebase-Samples/blob/master/app/src/main/java/com/canerture/firebaseexamples/service/FirebaseMessagingService.kt))
+
++ ### Dynamic Links ([DynamicLinksOperationsWrapper.kt](https://github.com/cnrture/Firebase-Samples/blob/master/app/src/main/java/com/canerture/firebaseexamples/data/wrapper/DynamicLinksOperationsWrapper.kt))
 
 + ### Crashlytics
 
-+ ### Remote Config
+</br>
 
-+ ### Cloud Messaging (FCM)
-
-+ ### Dynamic Links
-
-</br> </br>
 ## Auth
 
 ### Additional Providers
@@ -59,30 +43,8 @@
 
 </br>
 
-### Firestore
-
-| Add Data - Set Data | Update Data | Delete Data |
-| ------------------- | ----------- | ----------- |
-|<img src=""/>|<img src=""/>|<img src=""/>|
-
-</br>
-
-| Query Data | Get Data Once | Get Data Realtime Updates |
-| ---------- | ------------- | ------------------------- |
-|<img src=""/>|<img src=""/>|<img src=""/>|
-
-</br>
-
 ### AdMob
 
 | Banner | Interstitial | Native | Rewarded |
 | ------ | ------------ | ------ | -------- |
-|<img src=""/>|<img src=""/>|<img src=""/>|<img src=""/>|
-
-</br>
-
-### Storage
-
-| Upload | Download | Delete |
-| ------ | -------- | ------ |
-|<img src=""/>|<img src=""/>|<img src=""/>|
+|<img src="https://user-images.githubusercontent.com/29903779/198761709-4a898b76-80d0-45d1-8f22-82b04af10d48.png"/>|<img src="https://user-images.githubusercontent.com/29903779/198760174-9ebaccec-445f-478c-a0bd-285b41b81d72.gif"/>|<img src="https://user-images.githubusercontent.com/29903779/198760669-6ea43519-362d-4c9e-9b2c-39fe798e3ad2.gif"/>|<img src="https://user-images.githubusercontent.com/29903779/198760160-ec4206f4-d679-419b-a9ca-fc1479fc03b9.gif"/>|
